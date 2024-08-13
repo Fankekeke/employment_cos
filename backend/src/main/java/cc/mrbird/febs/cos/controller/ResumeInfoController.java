@@ -32,7 +32,7 @@ public class ResumeInfoController {
      */
     @GetMapping("/page")
     public R page(Page<ResumeInfo> page, ResumeInfo resumeInfo) {
-        return R.ok();
+        return R.ok(resumeInfoService.selectResumePage(page, resumeInfo));
     }
 
     /**

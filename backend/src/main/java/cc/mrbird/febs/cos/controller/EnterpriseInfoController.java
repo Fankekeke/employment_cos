@@ -32,7 +32,7 @@ public class EnterpriseInfoController {
      */
     @GetMapping("/page")
     public R page(Page<EnterpriseInfo> page, EnterpriseInfo enterpriseInfo) {
-        return R.ok();
+        return R.ok(enterpriseInfoService.selectEnterprisePage(page, enterpriseInfo));
     }
 
     /**

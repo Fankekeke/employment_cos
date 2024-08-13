@@ -35,7 +35,7 @@ public class ChatInfoController {
      */
     @GetMapping("/page")
     public R page(Page<ChatInfo> page, ChatInfo chatInfo) {
-        return R.ok();
+        return R.ok(chatInfoService.selectChatPage(page, chatInfo));
     }
 
     /**

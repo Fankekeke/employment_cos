@@ -32,7 +32,7 @@ public class VenueInfoController {
      */
     @GetMapping("/page")
     public R page(Page<VenueInfo> page, VenueInfo venueInfo) {
-        return R.ok();
+        return R.ok(venueInfoService.selectVenuePage(page, venueInfo));
     }
 
     /**

@@ -32,7 +32,7 @@ public class ExpertInfoController {
      */
     @GetMapping("/page")
     public R page(Page<ExpertInfo> page, ExpertInfo expertInfo) {
-        return R.ok();
+        return R.ok(expertInfoService.selectExpertPage(page, expertInfo));
     }
 
     /**

@@ -32,7 +32,7 @@ public class PostInfoController {
      */
     @GetMapping("/page")
     public R page(Page<PostInfo> page, PostInfo postInfo) {
-        return R.ok();
+        return R.ok(postInfoService.selectPostPage(page, postInfo));
     }
 
     /**

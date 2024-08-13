@@ -32,7 +32,7 @@ public class IndustryInfoController {
      */
     @GetMapping("/page")
     public R page(Page<IndustryInfo> page, IndustryInfo industryInfo) {
-        return R.ok();
+        return R.ok(industryInfoService.selectIndustryPage(page, industryInfo));
     }
 
     /**

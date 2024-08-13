@@ -32,7 +32,7 @@ public class CollectInfoController {
      */
     @GetMapping("/page")
     public R page(Page<CollectInfo> page, CollectInfo collectInfo) {
-        return R.ok();
+        return R.ok(collectInfoService.selectCollectPage(page, collectInfo));
     }
 
     /**
