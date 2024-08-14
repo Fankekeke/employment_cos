@@ -2,4 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.NotifyInfoMapper">
 
+    <!-- 分页获取消息通知信息 -->
+    <select id="selectNotifyPage" resultType="java.util.LinkedHashMap">
+        select
+        id,
+        user_code,
+        content,
+        del_flag,
+        create_date,
+        name
+        from
+        notify_info
+        where
+        1 = 1
+        <if test="notifyInfo.userCode != null and notifyInfo.userCode != ''">
+            AND user_code LIKE CONCAT('%',#{notifyInfo.userCode},'%')
+        </if>
+        <if test="notifyInfo.name != null and notifyInfo.name != ''">
+            AND name LIKE CONCAT('%',#{notifyInfo.name},'%')
+        </if>
+        order by
+        create_date desc
+    </select>
 </mapper>

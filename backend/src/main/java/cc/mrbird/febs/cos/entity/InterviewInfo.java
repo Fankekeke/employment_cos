@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -62,5 +63,12 @@ public class InterviewInfo implements Serializable {
      */
     private Integer status;
 
+    @TableField(exist = false)
+    private String enterpriseName;
 
+    @TableField(exist = false)
+    private String abbreviation;
+
+    @TableField(exist = false)
+    private String expertName;
 }

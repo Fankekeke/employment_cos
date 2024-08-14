@@ -2,4 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.VenueInfoMapper">
 
+    <!-- 分页获取会场信息信息 -->
+    <select id="selectVenuePage" resultType="java.util.LinkedHashMap">
+        select
+        vi.id,
+        vi.code,
+        vi.name,
+        vi.start_date,
+        vi.end_date,
+        vi.enterprise_id,
+        vi.address,
+        vi.longitude,
+        vi.latitude,
+        vi.remark,
+        vi.create_date,
+        ei.name as enterpriseName,
+        ei.abbreviation,
+        ei.nature,
+        ed.logo,
+        from
+        venue_info vi
+        left join enterprise_info ei on (ei.id = vi.enterprise_id)
+        left join enterprise_detail ed on (ed.enterprise_id = ei.id)
+        where
+        1 = 1
+        <if test="venueInfo.code != null and venueInfo.code != ''">
+            AND vi.code LIKE CONCAT('%',#{venueInfo.code},'%')
+        </if>
+        <if test="venueInfo.name != null and venueInfo.name != ''">
+            AND vi.name LIKE CONCAT('%',#{venueInfo.name},'%')
+        </if>
+        <if test="venueInfo.enterpriseName != null and venueInfo.enterpriseName != ''">
+            AND ei.name LIKE CONCAT('%',#{venueInfo.enterpriseName},'%')
+        </if>
+        <if test="venueInfo.abbreviation != null and venueInfo.abbreviation != ''">
+            AND ei.abbreviation LIKE CONCAT('%',#{venueInfo.abbreviation},'%')
+        </if>
+        order by
+        vi.create_date desc
+    </select>
 </mapper>

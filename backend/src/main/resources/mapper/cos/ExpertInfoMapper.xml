@@ -2,4 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.ExpertInfoMapper">
 
+    <!-- 分页获取学生信息信息 -->
+    <select id="selectExpertPage" resultType="java.util.LinkedHashMap">
+        select
+        id,
+        name,
+        nationality,
+        images,
+        sex,
+        political_status,
+        native_place,
+        employer,
+        `position`,
+        address,
+        phone,
+        level_one,
+        level_two,
+        birth_date,
+        job_title,
+        special_appellation,
+        mail,
+        fixed_telephone,
+        profile,
+        create_date,
+        code,
+        open_flag,
+        has_exist,
+        user_id,
+        school_name,
+        graduate_time,
+        educatio
+        from
+        expert_info
+        where
+        1 = 1
+        <if test="expertInfo.name != null and expertInfo.name != ''">
+            AND name LIKE CONCAT('%',#{expertInfo.name},'%')
+        </if>
+        <if test="expertInfo.schoolName != null and expertInfo.schoolName != ''">
+            AND school_name LIKE CONCAT('%',#{expertInfo.schoolName},'%')
+        </if>
+        <if test="expertInfo.phone != null and expertInfo.phone != ''">
+            AND phone LIKE CONCAT('%',#{expertInfo.phone},'%')
+        </if>
+        order by
+        create_date desc
+
+    </select>
 </mapper>

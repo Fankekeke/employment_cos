@@ -2,4 +2,54 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.EnterpriseInfoMapper">
 
+    <!-- 分页获取企业信息信息 -->
+    <select id="selectEnterprisePage" resultType="java.util.LinkedHashMap">
+        select
+        id,
+        name,
+        abbreviation,
+        credit_code,
+        code,
+        nature,
+        nature_two,
+        status,
+        corporate_representative,
+        corporate_representative_id,
+        corporate_representative_phone,
+        registered_capital,
+        registered_capital_currency,
+        establishment_date,
+        business_begin_date,
+        business_end_date,
+        registered_address,
+        business_scope,
+        source,
+        province,
+        city,
+        district,
+        en_name,
+        industry,
+        unit_description,
+        create_date,
+        images,
+        user_id
+        from
+        enterprise_info
+        where
+        1 = 1
+        <if test="enterpriseInfo.name != null and enterpriseInfo.name != ''">
+            AND name LIKE CONCAT('%',#{enterpriseInfo.name},'%')
+        </if>
+        <if test="enterpriseInfo.abbreviation != null and enterpriseInfo.abbreviation != ''">
+            AND abbreviation LIKE CONCAT('%',#{enterpriseInfo.abbreviation},'%')
+        </if>
+        <if test="enterpriseInfo.creditCode != null and enterpriseInfo.creditCode != ''">
+            AND credit_code LIKE CONCAT('%',#{enterpriseInfo.creditCode},'%')
+        </if>
+        <if test="enterpriseInfo.industry != null and enterpriseInfo.industry != ''">
+            AND industry LIKE CONCAT('%',#{enterpriseInfo.industry},'%')
+        </if>
+        order by
+        create_date desc
+    </select>
 </mapper>

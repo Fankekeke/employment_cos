@@ -2,4 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.ResumeInfoMapper">
 
+    <!-- 分页获取简历管理信息 -->
+    <select id="selectResumePage" resultType="java.util.LinkedHashMap">
+        select
+        ri.id,
+        ri.code,
+        ri.name,
+        ri.file_url,
+        ri.create_date,
+        ri.student_id,
+        ei.name as expertName,
+        ei.images as expertImages
+        from
+        resume_info ri
+        left join expert_info ei on
+        (ei.id = ri.student_id)
+        where
+        1 = 1
+        <if test="resumeInfo.name != null and resumeInfo.name != ''">
+            AND ri.name LIKE CONCAT('%',#{resumeInfo.name},'%')
+        </if>
+        <if test="resumeInfo.expertName != null and resumeInfo.expertName != ''">
+            AND ei.name LIKE CONCAT('%',#{resumeInfo.expertName},'%')
+        </if>
+        order by
+        ri.create_date desc
+    </select>
 </mapper>

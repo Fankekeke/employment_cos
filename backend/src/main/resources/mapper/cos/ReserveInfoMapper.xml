@@ -2,4 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.ReserveInfoMapper">
 
+    <!-- 分页获取学生会场预约信息 -->
+    <select id="selectReservePage" resultType="java.util.LinkedHashMap">
+        select
+        ri.id,
+        ri.venue_id,
+        ri.student_id,
+        ri.create_date,
+        ri.status,
+        ri.audit_date,
+        ri.resume_id,
+        ri.remark,
+        ei.name as expertName,
+        ei.images as expertImages,
+        vi.name as venueName,
+        vi.address,
+        vi.start_date,
+        vi.end_date,
+        ei2.name as enterpriseName,
+        ei2.abbreviation,
+        ei2.nature,
+        ri2.name as resumeName,
+        ri2.file_url
+        from
+        reserve_info ri
+        left join venue_info vi on
+        (vi.id = ri.venue_id)
+        left join expert_info ei on
+        (ei.id = ri.student_id)
+        left join resume_info ri2 on
+        (ri2.id = ri.resume_id)
+        left join enterprise_info ei2 on
+        (ei2.id = vi.enterprise_id)
+        where
+        1 = 1
+        <if test="reserveInfo.expertName != null and reserveInfo.expertName != ''">
+            AND ei.name LIKE CONCAT('%',#{reserveInfo.expertName},'%')
+        </if>
+        <if test="reserveInfo.venueName != null and reserveInfo.venueName != ''">
+            AND vi.name LIKE CONCAT('%',#{reserveInfo.venueName},'%')
+        </if>
+        <if test="reserveInfo.enterpriseName != null and reserveInfo.enterpriseName != ''">
+            AND ei2.name LIKE CONCAT('%',#{reserveInfo.enterpriseName},'%')
+        </if>
+        <if test="reserveInfo.status != null and reserveInfo.status != ''">
+            AND ri.status = #{reserveInfo.status}
+        </if>
+        order by
+        ri.create_date desc
+    </select>
 </mapper>

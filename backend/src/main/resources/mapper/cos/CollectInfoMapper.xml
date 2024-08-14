@@ -2,4 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.CollectInfoMapper">
 
+    <!-- 分页获取企业收藏信息 -->
+    <select id="selectCollectPage" resultType="java.util.LinkedHashMap">
+        select
+        ci.id,
+        ci.expert_code,
+        ci.base_id,
+        ci.create_date,
+        ci.`type`,
+        ci.enterprise_code,
+        ei.name as enterpriseName,
+        ei.abbreviation,
+        ei.nature,
+        ed.logo,
+        ei2.name as expertName,
+        ei2.images as expertImages
+        from
+        collect_info ci
+        left join enterprise_info ei on (ei.code = ci.enterprise_code)
+        left join enterprise_detail ed on (ed.enterprise_id = ei.id)
+        left join expert_info ei2 on (ei2.code = ci.expert_code)
+        where
+        1 = 1
+        <if test="collectInfo.enterpriseName != null and collectInfo.enterpriseName != ''">
+            AND ei.name LIKE CONCAT('%',#{collectInfo.enterpriseName},'%')
+        </if>
+        <if test="collectInfo.abbreviation != null and collectInfo.abbreviation != ''">
+            AND ei.abbreviation LIKE CONCAT('%',#{collectInfo.abbreviation},'%')
+        </if>
+        <if test="collectInfo.expertName != null and collectInfo.expertName != ''">
+            AND ei2.name LIKE CONCAT('%',#{collectInfo.expertName},'%')
+        </if>
+        order by
+        ci.create_date desc
+    </select>
 </mapper>

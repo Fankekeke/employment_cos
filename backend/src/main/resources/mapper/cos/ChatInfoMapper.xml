@@ -2,4 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.ChatInfoMapper">
 
+    <!-- 分页获取沟通信息 -->
+    <select id="selectChatPage" resultType="java.util.LinkedHashMap">
+        select
+        ci.id,
+        ci.expert_code,
+        ci.enterprise_code,
+        ci.`type`,
+        ci.content,
+        ci.create_date,
+        ei.name as enterpriseName,
+        ei.abbreviation,
+        ei.nature,
+        ed.logo,
+        ei2.name as expertName,
+        ei2.images as expertImages
+        from
+        chat_info ci
+        left join enterprise_info ei on (ei.code = ci.enterprise_code)
+        left join enterprise_detail ed on (ed.enterprise_id = ei.id)
+        left join expert_info ei2 on (ei2.code = ci.expert_code)
+        where
+        1 = 1
+        <if test="chatInfo.enterpriseName != null and chatInfo.enterpriseName != ''">
+            AND ei.name LIKE CONCAT('%',#{chatInfo.enterpriseName},'%')
+        </if>
+        <if test="chatInfo.abbreviation != null and chatInfo.abbreviation != ''">
+            AND ei.abbreviation LIKE CONCAT('%',#{chatInfo.abbreviation},'%')
+        </if>
+        <if test="chatInfo.expertName != null and chatInfo.expertName != ''">
+            AND ei2.name LIKE CONCAT('%',#{chatInfo.expertName},'%')
+        </if>
+        order by
+        ci.create_date desc
+    </select>
 </mapper>
