@@ -62,6 +62,18 @@ public class InterviewInfoController {
     }
 
     /**
+     * 面试审核
+     *
+     * @param status 状态
+     * @param id     主键
+     * @return 结果
+     */
+    @GetMapping("/audit")
+    public R audit(String status, Integer id) {
+        return R.ok(interviewInfoService.update(Wrappers.<InterviewInfo>lambdaUpdate().set(InterviewInfo::getStatus, status).eq(InterviewInfo::getId, id)));
+    }
+
+    /**
      * 新增所属面试管理信息
      *
      * @param interviewInfo 所属面试管理信息

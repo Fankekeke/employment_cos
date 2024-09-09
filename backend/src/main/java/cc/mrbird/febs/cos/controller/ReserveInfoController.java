@@ -6,12 +6,14 @@ import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.entity.ReserveInfo;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IReserveInfoService;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,7 +75,23 @@ public class ReserveInfoController {
         if (expertInfo != null) {
             reserveInfo.setStudentId(expertInfo.getId());
         }
+        // 审核状态
+        reserveInfo.setStatus("0");
+        // 提交时间
+        reserveInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(reserveInfoService.save(reserveInfo));
+    }
+
+    /**
+     * 预约审核
+     *
+     * @param id     主键ID
+     * @param status 状态
+     * @return 结果
+     */
+    @GetMapping("/audit")
+    public R audit(Integer id, String status) {
+        return R.ok(reserveInfoService.update(Wrappers.<ReserveInfo>lambdaUpdate().set(ReserveInfo::getStatus, status).eq(ReserveInfo::getId, id)));
     }
 
     /**
