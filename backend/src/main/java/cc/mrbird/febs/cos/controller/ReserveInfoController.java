@@ -2,8 +2,11 @@ package cc.mrbird.febs.cos.controller;
 
 
 import cc.mrbird.febs.common.utils.R;
+import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.entity.ReserveInfo;
+import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IReserveInfoService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.List;
 public class ReserveInfoController {
 
     private final IReserveInfoService reserveInfoService;
+
+    private final IExpertInfoService expertInfoService;
 
     /**
      * 分页获取学生会场预约信息
@@ -64,6 +69,10 @@ public class ReserveInfoController {
      */
     @PostMapping
     public R save(ReserveInfo reserveInfo) {
+        ExpertInfo expertInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, reserveInfo.getStudentId()));
+        if (expertInfo != null) {
+            reserveInfo.setStudentId(expertInfo.getId());
+        }
         return R.ok(reserveInfoService.save(reserveInfo));
     }
 

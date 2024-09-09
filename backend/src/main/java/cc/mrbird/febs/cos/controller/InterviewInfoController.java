@@ -2,8 +2,11 @@ package cc.mrbird.febs.cos.controller;
 
 
 import cc.mrbird.febs.common.utils.R;
+import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.entity.InterviewInfo;
+import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IInterviewInfoService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.List;
 public class InterviewInfoController {
 
     private final IInterviewInfoService interviewInfoService;
+
+    private final IExpertInfoService expertInfoService;
 
     /**
      * 分页获取所属面试管理信息
@@ -64,6 +69,10 @@ public class InterviewInfoController {
      */
     @PostMapping
     public R save(InterviewInfo interviewInfo) {
+        ExpertInfo expertInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, interviewInfo.getExpertId()));
+        if (expertInfo != null) {
+            interviewInfo.setExpertId(expertInfo.getId());
+        }
         return R.ok(interviewInfoService.save(interviewInfo));
     }
 

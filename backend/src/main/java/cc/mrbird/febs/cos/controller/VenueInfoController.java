@@ -2,8 +2,11 @@ package cc.mrbird.febs.cos.controller;
 
 
 import cc.mrbird.febs.common.utils.R;
+import cc.mrbird.febs.cos.entity.EnterpriseInfo;
 import cc.mrbird.febs.cos.entity.VenueInfo;
+import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
 import cc.mrbird.febs.cos.service.IVenueInfoService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.List;
 public class VenueInfoController {
 
     private final IVenueInfoService venueInfoService;
+
+    private final IEnterpriseInfoService enterpriseInfoService;
 
     /**
      * 分页获取会场信息信息
@@ -64,6 +69,12 @@ public class VenueInfoController {
      */
     @PostMapping
     public R save(VenueInfo venueInfo) {
+        // 会场编号
+        venueInfo.setCode("VEN-" + System.currentTimeMillis());
+        EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, venueInfo.getEnterpriseId()));
+        if (enterpriseInfo != null) {
+            venueInfo.setEnterpriseId(enterpriseInfo.getId());
+        }
         return R.ok(venueInfoService.save(venueInfo));
     }
 

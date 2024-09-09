@@ -34,6 +34,11 @@ public class CollectInfo implements Serializable {
     private String expertCode;
 
     /**
+     * 学生编号
+     */
+    private Integer expertId;
+
+    /**
      * 关联信息
      */
     private String baseId;
@@ -52,6 +57,8 @@ public class CollectInfo implements Serializable {
      * 企业编号
      */
     private Integer enterpriseCode;
+
+    private Integer enterpriseId;
 
     @TableField(exist = false)
     private String enterpriseName;

@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 沟通信息
+ * 技术沟通信息
  *
  * @author FanK
  */
@@ -29,7 +29,7 @@ public class ChatInfo implements Serializable {
     private Integer id;
 
     /**
-     * 学生编号
+     * 专家编号
      */
     private String expertCode;
 
@@ -39,7 +39,7 @@ public class ChatInfo implements Serializable {
     private String enterpriseCode;
 
     /**
-     * 发送类型（1.学生发企业收 2企业发学生收）
+     * 发送类型（1.专家发企业收 2企业发专家收）
      */
     private Integer type;
 
@@ -54,11 +54,8 @@ public class ChatInfo implements Serializable {
     private String createDate;
 
     @TableField(exist = false)
-    private String enterpriseName;
-
-    @TableField(exist = false)
-    private String abbreviation;
-
-    @TableField(exist = false)
     private String expertName;
+
+    @TableField(exist = true)
+    private String enterpriseName;
 }

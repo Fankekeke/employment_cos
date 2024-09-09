@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * 沟通信息 实现层
@@ -28,5 +29,29 @@ public class ChatInfoServiceImpl extends ServiceImpl<ChatInfoMapper, ChatInfo> i
     @Override
     public IPage<LinkedHashMap<String, Object>> selectChatPage(Page<ChatInfo> page, ChatInfo chatInfo) {
         return baseMapper.selectChatPage(page, chatInfo);
+    }
+
+    /**
+     * 根据用户编号获取联系人
+     *
+     * @param userCode 用户编号
+     * @param flag     1.专家 2.企业
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectContactPerson(String userCode, Integer flag) {
+        return baseMapper.selectContactPerson(userCode, flag);
+    }
+
+    /**
+     * 查询聊天记录
+     *
+     * @param expertCode     专家编号
+     * @param enterpriseCode 企业编号
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectChatList(String expertCode, String enterpriseCode) {
+        return baseMapper.selectChatList(expertCode, enterpriseCode);
     }
 }

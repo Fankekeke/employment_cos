@@ -2,8 +2,11 @@ package cc.mrbird.febs.cos.controller;
 
 
 import cc.mrbird.febs.common.utils.R;
+import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.entity.ResumeInfo;
+import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IResumeInfoService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.List;
 public class ResumeInfoController {
 
     private final IResumeInfoService resumeInfoService;
+
+    private final IExpertInfoService expertInfoService;
 
     /**
      * 分页获取简历管理信息
@@ -64,6 +69,11 @@ public class ResumeInfoController {
      */
     @PostMapping
     public R save(ResumeInfo resumeInfo) {
+        resumeInfo.setCode("RES-" + System.currentTimeMillis());
+        ExpertInfo expertInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, resumeInfo.getStudentId()));
+        if (expertInfo != null) {
+            resumeInfo.setStudentId(expertInfo.getId());
+        }
         return R.ok(resumeInfoService.save(resumeInfo));
     }
 

@@ -2,8 +2,11 @@ package cc.mrbird.febs.cos.controller;
 
 
 import cc.mrbird.febs.common.utils.R;
+import cc.mrbird.febs.cos.entity.EnterpriseInfo;
 import cc.mrbird.febs.cos.entity.PostInfo;
+import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
 import cc.mrbird.febs.cos.service.IPostInfoService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.List;
 public class PostInfoController {
 
     private final IPostInfoService postInfoService;
+
+    private final IEnterpriseInfoService enterpriseInfoService;
 
     /**
      * 分页获取岗位管理信息
@@ -64,6 +69,12 @@ public class PostInfoController {
      */
     @PostMapping
     public R save(PostInfo postInfo) {
+        // 岗位编号
+        postInfo.setCode("PT-" + System.currentTimeMillis());
+        EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, postInfo.getEnterpriseId()));
+        if (enterpriseInfo != null) {
+            postInfo.setEnterpriseId(enterpriseInfo.getId());
+        }
         return R.ok(postInfoService.save(postInfo));
     }
 

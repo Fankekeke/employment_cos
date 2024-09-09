@@ -3,7 +3,10 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.CollectInfo;
+import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.service.ICollectInfoService;
+import cc.mrbird.febs.cos.service.IExpertInfoService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.List;
 public class CollectInfoController {
 
     private final ICollectInfoService collectInfoService;
+
+    private final IExpertInfoService expertInfoService;
 
     /**
      * 分页获取企业收藏信息
@@ -64,6 +69,11 @@ public class CollectInfoController {
      */
     @PostMapping
     public R save(CollectInfo collectInfo) {
+        ExpertInfo expertInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, collectInfo.getExpertId()));
+        if (expertInfo != null) {
+            collectInfo.setExpertId(expertInfo.getId());
+            collectInfo.setExpertCode(expertInfo.getCode());
+        }
         return R.ok(collectInfoService.save(collectInfo));
     }
 
