@@ -48,6 +48,12 @@
         <if test="reserveInfo.status != null and reserveInfo.status != ''">
             AND ri.status = #{reserveInfo.status}
         </if>
+        <if test="reserveInfo.expertId != null and reserveInfo.expertId != ''">
+            AND ei.user_id = #{reserveInfo.expertId}
+        </if>
+        <if test="reserveInfo.enterpriseId != null and reserveInfo.enterpriseId != ''">
+            AND ei2.user_id = #{reserveInfo.enterpriseId}
+        </if>
         order by
         ri.create_date desc
     </select>

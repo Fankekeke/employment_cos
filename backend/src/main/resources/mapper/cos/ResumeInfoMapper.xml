@@ -25,6 +25,9 @@
         <if test="resumeInfo.expertName != null and resumeInfo.expertName != ''">
             AND ei.name LIKE CONCAT('%',#{resumeInfo.expertName},'%')
         </if>
+        <if test="resumeInfo.expertId != null and resumeInfo.expertId != ''">
+            AND ei.user_id = #{resumeInfo.expertId}
+        </if>
         order by
         ri.create_date desc
     </select>

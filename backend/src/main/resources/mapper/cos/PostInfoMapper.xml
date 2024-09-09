@@ -49,6 +49,9 @@
         <if test="postInfo.postName != null and postInfo.postName != ''">
             AND pi.post_name LIKE CONCAT('%',#{postInfo.postName},'%')
         </if>
+        <if test="postInfo.enterpriseId != null and postInfo.enterpriseId != ''">
+            AND ei.user_id = #{postInfo.enterpriseId}
+        </if>
         order by
         pi.create_date desc
 

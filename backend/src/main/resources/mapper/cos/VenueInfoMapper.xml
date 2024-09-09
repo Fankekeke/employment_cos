@@ -38,6 +38,9 @@
         <if test="venueInfo.abbreviation != null and venueInfo.abbreviation != ''">
             AND ei.abbreviation LIKE CONCAT('%',#{venueInfo.abbreviation},'%')
         </if>
+        <if test="venueInfo.enterpriseId != null and venueInfo.enterpriseId != ''">
+            AND ei.user_id = #{venueInfo.enterpriseId}
+        </if>
         order by
         vi.create_date desc
     </select>

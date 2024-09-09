@@ -38,6 +38,12 @@
         <if test="interviewInfo.expertName != null and interviewInfo.expertName != ''">
             AND ei.name LIKE CONCAT('%',#{interviewInfo.expertName},'%')
         </if>
+        <if test="interviewInfo.expertId != null and interviewInfo.expertId != ''">
+            AND ei.user_id = #{interviewInfo.expertId}
+        </if>
+        <if test="interviewInfo.enterpriseId != null and interviewInfo.enterpriseId != ''">
+            AND ei2.user_id = #{interviewInfo.enterpriseId}
+        </if>
         order by
         ini.create_date desc
     </select>

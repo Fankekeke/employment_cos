@@ -33,6 +33,9 @@
         <if test="collectInfo.expertName != null and collectInfo.expertName != ''">
             AND ei2.name LIKE CONCAT('%',#{collectInfo.expertName},'%')
         </if>
+        <if test="collectInfo.expertId != null and collectInfo.expertId != ''">
+            AND ei2.user_id = #{collectInfo.expertId}
+        </if>
         order by
         ci.create_date desc
     </select>
