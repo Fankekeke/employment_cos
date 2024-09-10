@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="用户名称"
+                label="会场名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.name"/>
@@ -15,7 +15,23 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="用户编号"
+                label="企业名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.enterpriseName"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="企业简称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.abbreviation"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="会场编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.code"/>
@@ -141,8 +157,8 @@ export default {
     }),
     columns () {
       return [{
-        title: '所属用户',
-        dataIndex: 'name',
+        title: '所属企业',
+        dataIndex: 'enterpriseName',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -152,36 +168,43 @@ export default {
         },
         ellipsis: true
       }, {
-        title: '头像',
-        dataIndex: 'images',
+        title: '简称',
+        dataIndex: 'abbreviation',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '企业照片',
+        dataIndex: 'logo',
         customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
+          if (!record.logo) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
           </a-popover>
         }
+      }, {
+        title: '单位性质',
+        dataIndex: 'nature',
+        ellipsis: true
       }, {
         title: '会场编号',
         dataIndex: 'code',
         ellipsis: true
       }, {
-        title: '省份',
-        dataIndex: 'province',
+        title: '会场名称',
+        dataIndex: 'name',
         ellipsis: true
       }, {
-        title: '市',
-        dataIndex: 'city',
-        ellipsis: true
-      }, {
-        title: '区',
-        dataIndex: 'area',
-        ellipsis: true
-      }, {
-        title: '详细会场',
-        dataIndex: 'venue',
+        title: '详细地址',
+        dataIndex: 'address',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -191,33 +214,11 @@ export default {
         },
         ellipsis: true
       }, {
-        title: '联系人',
-        dataIndex: 'contactPerson',
+        title: '开始/结束时间',
+        dataIndex: 'startDate',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        },
-        ellipsis: true
-      }, {
-        title: '联系方式',
-        dataIndex: 'contactMethod',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        },
-        ellipsis: true
-      }, {
-        title: '创建时间',
-        dataIndex: 'createDate',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
+            return row.startDate + ' ~ ' + row.endDate
           } else {
             return '- -'
           }
@@ -255,7 +256,7 @@ export default {
     },
     handlevenueAddSuccess () {
       this.venueAdd.visiable = false
-      this.$message.success('新增用户会场成功')
+      this.$message.success('新增会场会场成功')
       this.search()
     },
     edit (record) {
@@ -267,7 +268,7 @@ export default {
     },
     handlevenueEditSuccess () {
       this.venueEdit.visiable = false
-      this.$message.success('修改用户会场成功')
+      this.$message.success('修改会场会场成功')
       this.search()
     },
     handleDeptChange (value) {

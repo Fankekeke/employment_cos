@@ -130,41 +130,72 @@ export default {
     }),
     columns () {
       return [{
-        title: '标题',
-        dataIndex: 'title',
-        scopedSlots: { customRender: 'titleShow' },
-        width: 300
-      }, {
-        title: '预约内容',
-        dataIndex: 'content',
-        scopedSlots: { customRender: 'contentShow' },
-        width: 400
-      }, {
-        title: '发布时间',
-        dataIndex: 'createDate',
+        title: '所属企业',
+        dataIndex: 'enterpriseName',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
           } else {
             return '- -'
           }
+        },
+        ellipsis: true
+      }, {
+        title: '企业照片',
+        dataIndex: 'logo',
+        customRender: (text, record, index) => {
+          if (!record.logo) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+          </a-popover>
         }
       }, {
-        title: '预约状态',
-        dataIndex: 'rackUp',
+        title: '会场名称',
+        dataIndex: 'venueName',
+        ellipsis: true
+      }, {
+        title: '详细地址',
+        dataIndex: 'address',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '开始/结束时间',
+        dataIndex: 'startDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return row.startDate + ' ~ ' + row.endDate
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '状态',
+        dataIndex: 'status',
         customRender: (text, row, index) => {
           switch (text) {
-            case 0:
-              return <a-tag>下架</a-tag>
-            case 1:
-              return <a-tag>已发布</a-tag>
+            case '0':
+              return <a-tag>未审核</a-tag>
+            case '1':
+              return <a-tag color="blue">已通过</a-tag>
+            case '2':
+              return <a-tag color="red">未通过</a-tag>
             default:
               return '- -'
           }
         }
       }, {
-        title: '上传人',
-        dataIndex: 'publisher',
+        title: '提交时间',
+        dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

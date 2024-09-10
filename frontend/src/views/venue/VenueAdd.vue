@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="新增用户会场"
+    title="新增会场会场"
     :maskClosable="false"
     width=800
     placement="right"
@@ -27,7 +27,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='用户详细会场'>
+          <a-form-item label='会场详细会场'>
             <a-input-search
               v-decorator="[
               'venue'

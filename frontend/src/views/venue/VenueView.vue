@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="用户会场详情" @cancel="onClose" :width="1000">
+  <a-modal v-model="show" title="会场会场详情" @cancel="onClose" :width="1000">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -38,7 +38,7 @@
         <a-col :span="8"><b>纬度：</b>
           {{ venueData.latitude }}
         </a-col>
-        <a-col :span="8"><b>所属用户：</b>
+        <a-col :span="8"><b>所属会场：</b>
           {{ venueData.name }}
         </a-col>
       </a-row>

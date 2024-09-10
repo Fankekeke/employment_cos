@@ -7,18 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="标题"
+                label="简历名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.title"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="内容"
+                label="学生姓名"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.content"/>
+                <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -130,18 +130,14 @@ export default {
     }),
     columns () {
       return [{
-        title: '标题',
-        dataIndex: 'title',
-        scopedSlots: { customRender: 'titleShow' },
-        width: 300
+        title: '简历编号',
+        dataIndex: 'code'
       }, {
-        title: '简历内容',
-        dataIndex: 'content',
-        scopedSlots: { customRender: 'contentShow' },
-        width: 400
+        title: '简历名称',
+        dataIndex: 'name'
       }, {
-        title: '发布时间',
-        dataIndex: 'createDate',
+        title: '文件名称',
+        dataIndex: 'fileUrl',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -150,21 +146,30 @@ export default {
           }
         }
       }, {
-        title: '简历状态',
-        dataIndex: 'rackUp',
+        title: '所属学生',
+        dataIndex: 'expertName',
         customRender: (text, row, index) => {
-          switch (text) {
-            case 0:
-              return <a-tag>下架</a-tag>
-            case 1:
-              return <a-tag>已发布</a-tag>
-            default:
-              return '- -'
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
           }
         }
       }, {
-        title: '上传人',
-        dataIndex: 'publisher',
+        title: '学生照片',
+        dataIndex: 'expertImages',
+        customRender: (text, record, index) => {
+          if (!record.expertImages) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '创建时间',
+        dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

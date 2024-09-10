@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="求职者名称"
+                label="学生名称"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
                 <a-input v-model="queryParams.expertName"/>
@@ -107,19 +107,19 @@ export default {
     }),
     columns () {
       return [{
-        title: '求职者编号',
+        title: '学生编号',
         dataIndex: 'expertCode'
       }, {
         title: '企业编号',
         dataIndex: 'enterCode'
       }, {
-        title: '求职者名称',
+        title: '学生名称',
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
         dataIndex: 'expertName'
       }, {
-        title: '求职者头像',
+        title: '学生头像',
         dataIndex: 'expertImages',
         customRender: (text, record, index) => {
           if (!record.expertImages) return <a-avatar shape="square" icon="user" />
@@ -137,13 +137,13 @@ export default {
     },
     postColumns () {
       return [{
-        title: '求职者名称',
+        title: '学生名称',
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
         dataIndex: 'enterName'
       }, {
-        title: '求职者头像',
+        title: '学生头像',
         dataIndex: 'expertImages',
         customRender: (text, record, index) => {
           if (!record.expertImages) return <a-avatar shape="square" icon="user" />
@@ -204,13 +204,13 @@ export default {
     },
     pluralismColumns () {
       return [{
-        title: '求职者名称',
+        title: '学生名称',
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
         dataIndex: 'enterName'
       }, {
-        title: '求职者头像',
+        title: '学生头像',
         dataIndex: 'expertImages',
         customRender: (text, record, index) => {
           if (!record.expertImages) return <a-avatar shape="square" icon="user" />
