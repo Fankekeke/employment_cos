@@ -5,6 +5,10 @@ import cc.mrbird.febs.common.domain.QueryRequest;
 import cc.mrbird.febs.common.service.CacheService;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
+import cc.mrbird.febs.cos.entity.EnterpriseDetail;
+import cc.mrbird.febs.cos.entity.EnterpriseInfo;
+import cc.mrbird.febs.cos.service.IEnterpriseDetailService;
+import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
 import cc.mrbird.febs.system.dao.UserMapper;
 import cc.mrbird.febs.system.dao.UserRoleMapper;
 import cc.mrbird.febs.system.domain.User;
@@ -44,6 +48,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserRoleService userRoleService;
     @Autowired
     private UserManager userManager;
+
+    @Autowired
+    private IEnterpriseInfoService enterpriseInfoService;
+
+    @Autowired
+    private IEnterpriseDetailService enterpriseDetailService;
 
 
     @Override
@@ -164,6 +174,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void regist(String username, String password, String staffCode) throws Exception {
 
+    }
+
+    /**
+     * 注册企业
+     *
+     * @param username 用户名
+     * @param password 密码
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void registEnterprise(String username, String password, EnterpriseInfo enterprise, EnterpriseDetail enterpriseDetail) throws Exception {
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(username, password));
+        user.setUsername(username);
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册企业");
+        this.save(user);
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        ur.setRoleId(75L); // 注册用户角色 ID
+        this.userRoleMapper.insert(ur);
+
+        // 添加企业信息
+        enterprise.setUserId(user.getUserId().intValue());
+        enterpriseInfoService.save(enterprise);
+
+        enterpriseDetail.setEnterpriseId(enterprise.getId());
+        enterpriseDetailService.save(enterpriseDetail);
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
     }
 
     @Override
