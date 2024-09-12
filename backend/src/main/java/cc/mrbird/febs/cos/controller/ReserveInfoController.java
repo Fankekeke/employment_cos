@@ -64,6 +64,17 @@ public class ReserveInfoController {
     }
 
     /**
+     * 获取预约详情
+     *
+     * @param id 主键
+     * @return 结果
+     */
+    @GetMapping("/queryReserveDetail/{id}")
+    public R queryReserveDetail(@PathVariable("id") Integer id) {
+        return R.ok(reserveInfoService.queryReserveDetail(id));
+    }
+
+    /**
      * 新增学生会场预约信息
      *
      * @param reserveInfo 学生会场预约信息

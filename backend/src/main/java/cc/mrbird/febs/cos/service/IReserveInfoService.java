@@ -23,4 +23,12 @@ public interface IReserveInfoService extends IService<ReserveInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectReservePage(Page<ReserveInfo> page, ReserveInfo reserveInfo);
+
+    /**
+     * 查询学生会场预约信息详情
+     *
+     * @param id 主键ID
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> queryReserveDetail(Integer id);
 }

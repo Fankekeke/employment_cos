@@ -79,6 +79,11 @@ public class VenueInfo implements Serializable {
      */
     private String createDate;
 
+    /**
+     * 状态
+     */
+    private Boolean status;
+
     @TableField(exist = false)
     private String enterpriseName;
 
