@@ -71,4 +71,10 @@ public class ReserveInfo implements Serializable {
 
     @TableField(exist = false)
     private String expertName;
+
+    @TableField(exist = false)
+    private Integer expertId;
+
+    @TableField(exist = false)
+    private Integer enterpriseId;
 }

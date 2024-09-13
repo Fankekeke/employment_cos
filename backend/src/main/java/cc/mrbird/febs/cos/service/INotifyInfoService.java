@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * 消息通知 service层
@@ -23,4 +24,12 @@ public interface INotifyInfoService extends IService<NotifyInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectNotifyPage(Page<NotifyInfo> page, NotifyInfo notifyInfo);
+
+    /**
+     * 根据用户ID获取通知消息
+     *
+     * @param userCode 用户ID
+     * @return 结果
+     */
+    List<NotifyInfo> selectNotifyByUserId(String userCode);
 }

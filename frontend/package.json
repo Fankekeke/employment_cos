@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "ant-design-vue": "1.5.2",
+    "apexcharts": "^3.53.0",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "browserslist": "^3.2.8",

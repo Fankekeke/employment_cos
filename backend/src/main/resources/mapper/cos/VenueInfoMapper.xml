@@ -19,7 +19,7 @@
         ei.name as enterpriseName,
         ei.abbreviation,
         ei.nature,
-        ed.logo,
+        ed.logo
         from
         venue_info vi
         left join enterprise_info ei on (ei.id = vi.enterprise_id)

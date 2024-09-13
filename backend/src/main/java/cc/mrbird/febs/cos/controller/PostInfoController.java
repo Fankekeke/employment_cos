@@ -6,12 +6,14 @@ import cc.mrbird.febs.cos.entity.EnterpriseInfo;
 import cc.mrbird.febs.cos.entity.PostInfo;
 import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
 import cc.mrbird.febs.cos.service.IPostInfoService;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +40,18 @@ public class PostInfoController {
     @GetMapping("/page")
     public R page(Page<PostInfo> page, PostInfo postInfo) {
         return R.ok(postInfoService.selectPostPage(page, postInfo));
+    }
+
+    /**
+     * 岗位信息上下架
+     *
+     * @param postId 岗位ID
+     * @param status 状态
+     * @return 结果
+     */
+    @GetMapping("/audit")
+    public R audit(@RequestParam("postId") Integer postId, @RequestParam("status") Integer status) {
+        return R.ok(postInfoService.update(Wrappers.<PostInfo>lambdaUpdate().set(PostInfo::getDelFlag, status).eq(PostInfo::getId, postId)));
     }
 
     /**
@@ -75,6 +89,8 @@ public class PostInfoController {
         if (enterpriseInfo != null) {
             postInfo.setEnterpriseId(enterpriseInfo.getId());
         }
+        postInfo.setDelFlag(1);
+        postInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(postInfoService.save(postInfo));
     }
 

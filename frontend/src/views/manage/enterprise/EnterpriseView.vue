@@ -78,7 +78,9 @@
         <a-col :span="8"><b>所属行业：</b>
           {{ enterpriseData.industry }}
         </a-col>
-        <a-col :span="8"><b>单位简介：</b>
+        <br/>
+        <br/>
+        <a-col :span="24"><b>单位简介：</b>
           {{ enterpriseData.unitDescription }}
         </a-col>
       </a-row>

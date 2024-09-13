@@ -4,6 +4,7 @@ package cc.mrbird.febs.cos.controller;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.NotifyInfo;
 import cc.mrbird.febs.cos.service.INotifyInfoService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,28 @@ public class NotifyInfoController {
     @GetMapping("/page")
     public R page(Page<NotifyInfo> page, NotifyInfo notifyInfo) {
         return R.ok(notifyInfoService.selectNotifyPage(page, notifyInfo));
+    }
+
+    /**
+     * 根据用户ID获取通知消息
+     *
+     * @param userCode 用户ID
+     * @return 结果
+     */
+    @GetMapping("/list/{userCode}")
+    public R selectNotifyByUserId(@PathVariable("userCode") String userCode) {
+        return R.ok(notifyInfoService.selectNotifyByUserId(userCode));
+    }
+
+    /**
+     * 设置公告阅读状态
+     *
+     * @param id id
+     * @return 结果
+     */
+    @GetMapping("/setReadStatus/{id}")
+    public R setReadStatus(@PathVariable("id") Integer id) {
+        return R.ok(notifyInfoService.update(Wrappers.<NotifyInfo>lambdaUpdate().set(NotifyInfo::getDelFlag, 1).eq(NotifyInfo::getId, id)));
     }
 
     /**

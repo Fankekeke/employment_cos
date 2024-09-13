@@ -1,14 +1,19 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.utils.FileDownloadUtils;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.EnterpriseInfo;
 import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -33,6 +38,90 @@ public class EnterpriseInfoController {
     @GetMapping("/page")
     public R page(Page<EnterpriseInfo> page, EnterpriseInfo enterpriseInfo) {
         return R.ok(enterpriseInfoService.selectEnterprisePage(page, enterpriseInfo));
+    }
+
+    /**
+     * 根据岗位ID获取详情
+     *
+     * @param postId 岗位ID
+     * @return 结果
+     */
+    @GetMapping("/post/detail")
+    public R selectPostDetail(@PathVariable("postId") Integer postId) {
+        return R.ok(enterpriseInfoService.selectPostDetail(postId));
+    }
+
+    /**
+     * 根据企业ID获取面试信息
+     *
+     * @param userId 企业ID
+     * @return 结果
+     */
+    @GetMapping("/inter/view/{userId}")
+    public R selectInterViewByEnterPrise(@PathVariable("userId") Integer userId) {
+        return R.ok(enterpriseInfoService.selectInterViewByEnterPrise(userId));
+    }
+
+    /**
+     * 根据企业获取面试信息
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @GetMapping("/inter/{userId}")
+    public R selectInterViewByEnterprise(@PathVariable("userId") Integer userId) {
+        return R.ok(enterpriseInfoService.selectInterViewByEnterprise(userId));
+    }
+
+    @GetMapping("/list/{key}")
+    public R listByKey(@PathVariable(value = "key", required = false) String key) {
+        return R.ok(enterpriseInfoService.list(Wrappers.<EnterpriseInfo>lambdaQuery()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getName, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getAbbreviation, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getCreditCode, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getNature, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getBusinessScope, key).or()
+                .like(StrUtil.isNotEmpty(key), EnterpriseInfo::getIndustry, key)));
+    }
+
+    /**
+     * 根据编号查询企业信息
+     *
+     * @param enterpriseCode 企业编号
+     * @return 结果
+     */
+    @GetMapping("/detail/code/{enterpriseCode}")
+    public R detail(@PathVariable("enterpriseCode") String enterpriseCode) {
+        return R.ok(enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getCode, enterpriseCode)));
+    }
+
+    /**
+     * 下载模板
+     */
+    @GetMapping("/template")
+    public void downloadTemplate(HttpServletResponse response) {
+        try {
+            FileDownloadUtils.downloadTemplate(response, "企业基础数据.xlsx");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 导入企业信息列表
+     */
+    @PostMapping("/import")
+    public R importExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            String errorMsg = enterpriseInfoService.importExcel(file);
+            if (StrUtil.isNotEmpty(errorMsg)) {
+                return R.error(errorMsg);
+            }
+            return R.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return R.error("导入异常");
     }
 
     /**

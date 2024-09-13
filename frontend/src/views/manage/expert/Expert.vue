@@ -7,25 +7,25 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="求职者姓名"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                label="学生姓名"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
                 label="岗位"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.position"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
                 label="联系电话"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.phone"/>
               </a-form-item>
             </a-col>
@@ -145,8 +145,9 @@ export default {
     }),
     columns () {
       return [{
-        title: '求职者名称',
-        dataIndex: 'name'
+        title: '学生名称',
+        dataIndex: 'name',
+        ellipsis: true
       }, {
         title: '民族',
         dataIndex: 'nationality',
@@ -188,7 +189,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '籍贯',
         dataIndex: 'nativePlace',
@@ -198,7 +200,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '工作单位',
         dataIndex: 'employer',
@@ -208,7 +211,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '职务',
         dataIndex: 'position',
@@ -218,7 +222,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '通讯地址',
         dataIndex: 'address',
@@ -228,7 +233,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '手机号',
         dataIndex: 'phone',
@@ -238,27 +244,8 @@ export default {
           } else {
             return '- -'
           }
-        }
-      }, {
-        title: '专业方向一级',
-        dataIndex: 'levelOne',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '专业方向二级',
-        dataIndex: 'levelTwo',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',

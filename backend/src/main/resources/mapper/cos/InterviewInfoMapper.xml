@@ -47,4 +47,42 @@
         order by
         ini.create_date desc
     </select>
+
+    <!-- 根据面试ID获取岗位面试信息 -->
+    <select id="selectInterViewPostByIds" resultType="java.util.LinkedHashMap">
+        select
+        ini.id,
+        ini.expert_id,
+        ini.base_id,
+        ini.`type`,
+        ini.create_date,
+        ini.enterprise_id,
+        ini.del_flag,
+        ini.status,
+        pi.post_name,
+        pi.academic,
+        pi.work_time,
+        pi.work_hour,
+        pi.work_address,
+        pi.salary,
+        exi.name as expertName,
+        exi.images as expertImages,
+        eni.name as enterName,
+        eni.images as enterImages
+        from
+        interview_info ini
+        left join post_info pi on
+        (pli.id = ini.base_id)
+        left join expert_info exi on
+        (exi.id = ini.expert_id)
+        left join enterprise_info eni on
+        (eni.id = ini.enterprise_id)
+        where 1 = 1
+        AND ini.id IN
+        <foreach item="ids" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by
+        ini.create_date desc
+    </select>
 </mapper>

@@ -4,11 +4,13 @@ package cc.mrbird.febs.cos.controller;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.IndustryInfo;
 import cc.mrbird.febs.cos.service.IIndustryInfoService;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,6 +66,8 @@ public class IndustryInfoController {
      */
     @PostMapping
     public R save(IndustryInfo industryInfo) {
+        industryInfo.setCode("IDT-" + System.currentTimeMillis());
+        industryInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(industryInfoService.save(industryInfo));
     }
 
