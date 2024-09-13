@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import RentView from '../../admin/post/PostView.vue'
+import RentView from '../../manage/post/PostView.vue'
 import {mapState} from 'vuex'
 export default {
   name: 'House',
