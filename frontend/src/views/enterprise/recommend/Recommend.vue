@@ -7,17 +7,17 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="求职者名称"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                label="学生名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
                 label="岗位"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.position"/>
               </a-form-item>
             </a-col>
@@ -126,7 +126,7 @@ export default {
         title: '推荐人',
         dataIndex: 'recommendName'
       }, {
-        title: '求职者名称',
+        title: '学生名称',
         dataIndex: 'name'
       }, {
         title: '审核状态',

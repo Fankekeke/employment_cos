@@ -7,18 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="兼职标题"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.title"/>
+                label="简历名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="岗位名称"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.postName"/>
+                label="学生姓名"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -46,6 +46,8 @@
                @change="handleTableChange">
         <template slot="titleShow" slot-scope="text, record">
           <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
             <a-tooltip>
               <template slot="title">
                 {{ record.title }}
@@ -60,61 +62,48 @@
               <template slot="title">
                 {{ record.content }}
               </template>
-              {{ record.content.slice(0, 30) }} ...
+              {{ record.content.slice(0, 25) }} ...
             </a-tooltip>
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-if="record.delFlag === 1" type="caret-down" @click="audit(record.id, 0)" title="下 架" style="margin-right: 10px"></a-icon>
-          <a-icon v-if="record.delFlag === 0" type="caret-up" @click="audit(record.id, 1)" title="上 架" style="margin-right: 10px"></a-icon>
-          <a-icon type="cloud" @click="handlePluralismViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
         </template>
       </a-table>
     </div>
-    <pluralism-add
-      v-if="pluralismAdd.visiable"
-      @close="handlepluralismAddClose"
-      @success="handlepluralismAddSuccess"
-      :pluralismAddVisiable="pluralismAdd.visiable">
-    </pluralism-add>
-    <pluralism-edit
-      ref="pluralismEdit"
-      @close="handlepluralismEditClose"
-      @success="handlepluralismEditSuccess"
-      :pluralismEditVisiable="pluralismEdit.visiable">
-    </pluralism-edit>
-    <pluralism-view
-      @close="handlePluralismViewClose"
-      :pluralismShow="pluralismView.visiable"
-      :pluralismData="pluralismView.data">
-    </pluralism-view>
+    <resume-add
+      v-if="resumeAdd.visiable"
+      @close="handleresumeAddClose"
+      @success="handleresumeAddSuccess"
+      :resumeAddVisiable="resumeAdd.visiable">
+    </resume-add>
+    <resume-edit
+      ref="resumeEdit"
+      @close="handleresumeEditClose"
+      @success="handleresumeEditSuccess"
+      :resumeEditVisiable="resumeEdit.visiable">
+    </resume-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import pluralismAdd from './PluralismAdd'
-import pluralismEdit from './PluralismEdit'
+import resumeAdd from './ResumeAdd.vue'
+import resumeEdit from './ResumeEdit.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import PluralismView from './PluralismView.vue'
 moment.locale('zh-cn')
 
 export default {
-  name: 'pluralism',
-  components: {PluralismView, pluralismAdd, pluralismEdit, RangeDate},
+  name: 'resume',
+  components: {resumeAdd, resumeEdit, RangeDate},
   data () {
     return {
-      pluralismView: {
-        visiable: false,
-        data: null
-      },
       advanced: false,
-      pluralismAdd: {
+      resumeAdd: {
         visiable: false
       },
-      pluralismEdit: {
+      resumeEdit: {
         visiable: false
       },
       queryParams: {},
@@ -141,31 +130,14 @@ export default {
     }),
     columns () {
       return [{
-        title: '兼职标题',
-        dataIndex: 'title'
+        title: '简历编号',
+        dataIndex: 'code'
       }, {
-        title: '岗位名称',
-        dataIndex: 'postName'
+        title: '简历名称',
+        dataIndex: 'name'
       }, {
-        title: '结算方式',
-        dataIndex: 'paymentMethod',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>日结</a-tag>
-            case 2:
-              return <a-tag>周结</a-tag>
-            case 3:
-              return <a-tag>月结</a-tag>
-            case 4:
-              return <a-tag>季结</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '工作时间',
-        dataIndex: 'workTime',
+        title: '文件名称',
+        dataIndex: 'fileUrl',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -174,8 +146,8 @@ export default {
           }
         }
       }, {
-        title: '工作时段',
-        dataIndex: 'workHour',
+        title: '所属学生',
+        dataIndex: 'expertName',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -184,62 +156,19 @@ export default {
           }
         }
       }, {
-        title: '工作地点',
-        dataIndex: 'workAddress',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '所属行业',
-        dataIndex: 'industryName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '状态',
-        dataIndex: 'delFlag',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag color="green">上架</a-tag>
-            case 0:
-              return <a-tag color="red">下架</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '企业名称',
-        dataIndex: 'enterpriseName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '企业照片',
-        dataIndex: 'images',
+        title: '学生照片',
+        dataIndex: 'expertImages',
         customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
+          if (!record.expertImages) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
           </a-popover>
         }
       }, {
-        title: '发布时间',
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -259,19 +188,6 @@ export default {
     this.fetch()
   },
   methods: {
-    audit (id, status) {
-      this.$get('/cos/pluralism-info/audit', {pluralismId: id, status}).then((r) => {
-        this.$message.success('修改成功')
-        this.search()
-      })
-    },
-    handlePluralismViewClose () {
-      this.pluralismView.visiable = false
-    },
-    handlePluralismViewOpen (row) {
-      this.pluralismView.data = row
-      this.pluralismView.visiable = true
-    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
@@ -279,26 +195,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.pluralismAdd.visiable = true
+      this.resumeAdd.visiable = true
     },
-    handlepluralismAddClose () {
-      this.pluralismAdd.visiable = false
+    handleresumeAddClose () {
+      this.resumeAdd.visiable = false
     },
-    handlepluralismAddSuccess () {
-      this.pluralismAdd.visiable = false
-      this.$message.success('新增兼职成功')
+    handleresumeAddSuccess () {
+      this.resumeAdd.visiable = false
+      this.$message.success('新增简历成功')
       this.search()
     },
     edit (record) {
-      this.$refs.pluralismEdit.setFormValues(record)
-      this.pluralismEdit.visiable = true
+      this.$refs.resumeEdit.setFormValues(record)
+      this.resumeEdit.visiable = true
     },
-    handlepluralismEditClose () {
-      this.pluralismEdit.visiable = false
+    handleresumeEditClose () {
+      this.resumeEdit.visiable = false
     },
-    handlepluralismEditSuccess () {
-      this.pluralismEdit.visiable = false
-      this.$message.success('修改兼职成功')
+    handleresumeEditSuccess () {
+      this.resumeEdit.visiable = false
+      this.$message.success('修改简历成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -316,7 +232,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/pluralism-info/' + ids).then(() => {
+          that.$delete('/cos/resume-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -386,8 +302,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      params.enterpriseId = this.currentUser.userId
-      this.$get('/cos/pluralism-info/page', {
+      this.$get('/cos/resume-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

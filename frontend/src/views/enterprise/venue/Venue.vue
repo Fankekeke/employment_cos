@@ -7,6 +7,14 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
+                label="会场名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.name"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
                 label="企业名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
@@ -15,18 +23,18 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="工作地点"
+                label="企业简称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.address"/>
+                <a-input v-model="queryParams.abbreviation"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="岗位名称"
+                label="会场编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.postName"/>
+                <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
           </div>
@@ -39,7 +47,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -54,6 +62,8 @@
                @change="handleTableChange">
         <template slot="titleShow" slot-scope="text, record">
           <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
             <a-tooltip>
               <template slot="title">
                 {{ record.title }}
@@ -68,62 +78,60 @@
               <template slot="title">
                 {{ record.content }}
               </template>
-              {{ record.content.slice(0, 30) }} ...
+              {{ record.content.slice(0, 40) }} ...
             </a-tooltip>
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-if="record.delFlag === 1" type="caret-down" @click="audit(record.id, 0)" title="下 架" style="margin-right: 10px"></a-icon>
-          <a-icon v-if="record.delFlag === 0" type="caret-up" @click="audit(record.id, 1)" title="上 架" style="margin-right: 10px"></a-icon>
-          <a-icon type="cloud" @click="handlePostViewOpen(record)" title="详 情"></a-icon>
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+          <a-icon type="file-search" @click="venueViewOpen(record)" title="详 情" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
-    <post-add
-      v-if="pluralismAdd.visiable"
-      @close="handlepluralismAddClose"
-      @success="handlepluralismAddSuccess"
-      :pluralismAddVisiable="pluralismAdd.visiable">
-    </post-add>
-    <post-edit
-      ref="pluralismEdit"
-      @close="handlepluralismEditClose"
-      @success="handlepluralismEditSuccess"
-      :pluralismEditVisiable="pluralismEdit.visiable">
-    </post-edit>
-    <post-view
-      @close="handlePostViewClose"
-      :pluralismShow="postView.visiable"
-      :pluralismData="postView.data">
-    </post-view>
+    <venue-add
+      v-if="venueAdd.visiable"
+      @close="handlevenueAddClose"
+      @success="handlevenueAddSuccess"
+      :venueAddVisiable="venueAdd.visiable">
+    </venue-add>
+    <venue-edit
+      ref="venueEdit"
+      @close="handlevenueEditClose"
+      @success="handlevenueEditSuccess"
+      :venueEditVisiable="venueEdit.visiable">
+    </venue-edit>
+    <venue-view
+      @close="handlevenueViewClose"
+      :venueShow="venueView.visiable"
+      :venueData="venueView.data">
+    </venue-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import postAdd from './PostAdd'
-import postEdit from './PostEdit'
+import venueAdd from './VenueAdd.vue'
+import venueEdit from './VenueEdit.vue'
+import venueView from './VenueView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import PostView from './PostView.vue'
 moment.locale('zh-cn')
 
 export default {
-  name: 'pluralism',
-  components: {PostView, postAdd, postEdit, RangeDate},
+  name: 'venue',
+  components: {venueAdd, venueEdit, venueView, RangeDate},
   data () {
     return {
-      postView: {
+      advanced: false,
+      venueAdd: {
+        visiable: false
+      },
+      venueEdit: {
+        visiable: false
+      },
+      venueView: {
         visiable: false,
         data: null
-      },
-      advanced: false,
-      pluralismAdd: {
-        visiable: false
-      },
-      pluralismEdit: {
-        visiable: false
       },
       queryParams: {},
       filteredInfo: null,
@@ -149,69 +157,7 @@ export default {
     }),
     columns () {
       return [{
-        title: '岗位编号',
-        dataIndex: 'code',
-        ellipsis: true
-      }, {
-        title: '岗位名称',
-        dataIndex: 'postName',
-        ellipsis: true
-      }, {
-        title: '工作时间',
-        dataIndex: 'workTime',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        },
-        ellipsis: true
-      }, {
-        title: '工作时段',
-        dataIndex: 'workHour',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        },
-        ellipsis: true
-      }, {
-        title: '薪资',
-        dataIndex: 'salary',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '工作地点',
-        dataIndex: 'address',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        },
-        ellipsis: true
-      }, {
-        title: '所属行业',
-        dataIndex: 'industryName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        },
-        ellipsis: true
-      }, {
-        title: '企业名称',
+        title: '所属企业',
         dataIndex: 'enterpriseName',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -222,23 +168,57 @@ export default {
         },
         ellipsis: true
       }, {
-        title: '企业照片',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
-          </a-popover>
-        }
-      }, {
-        title: '发布时间',
-        dataIndex: 'createDate',
+        title: '简称',
+        dataIndex: 'abbreviation',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '企业照片',
+        dataIndex: 'logo',
+        customRender: (text, record, index) => {
+          if (!record.logo) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '单位性质',
+        dataIndex: 'nature',
+        ellipsis: true
+      }, {
+        title: '会场编号',
+        dataIndex: 'code',
+        ellipsis: true
+      }, {
+        title: '会场名称',
+        dataIndex: 'name',
+        ellipsis: true
+      }, {
+        title: '详细地址',
+        dataIndex: 'address',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '开始/结束时间',
+        dataIndex: 'startDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return row.startDate + ' ~ ' + row.endDate
           } else {
             return '- -'
           }
@@ -255,18 +235,12 @@ export default {
     this.fetch()
   },
   methods: {
-    audit (id, status) {
-      this.$get('/cos/post-info/audit', {postId: id, status}).then((r) => {
-        this.$message.success('修改成功')
-        this.search()
-      })
+    venueViewOpen (row) {
+      this.venueView.data = row
+      this.venueView.visiable = true
     },
-    handlePostViewClose () {
-      this.postView.visiable = false
-    },
-    handlePostViewOpen (row) {
-      this.postView.data = row
-      this.postView.visiable = true
+    handlevenueViewClose () {
+      this.venueView.visiable = false
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -275,26 +249,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.pluralismAdd.visiable = true
+      this.venueAdd.visiable = true
     },
-    handlepluralismAddClose () {
-      this.pluralismAdd.visiable = false
+    handlevenueAddClose () {
+      this.venueAdd.visiable = false
     },
-    handlepluralismAddSuccess () {
-      this.pluralismAdd.visiable = false
-      this.$message.success('新增岗位成功')
+    handlevenueAddSuccess () {
+      this.venueAdd.visiable = false
+      this.$message.success('新增会场会场成功')
       this.search()
     },
     edit (record) {
-      this.$refs.pluralismEdit.setFormValues(record)
-      this.pluralismEdit.visiable = true
+      this.$refs.venueEdit.setFormValues(record)
+      this.venueEdit.visiable = true
     },
-    handlepluralismEditClose () {
-      this.pluralismEdit.visiable = false
+    handlevenueEditClose () {
+      this.venueEdit.visiable = false
     },
-    handlepluralismEditSuccess () {
-      this.pluralismEdit.visiable = false
-      this.$message.success('修改岗位成功')
+    handlevenueEditSuccess () {
+      this.venueEdit.visiable = false
+      this.$message.success('修改会场会场成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -312,7 +286,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/post-info/' + ids).then(() => {
+          that.$delete('/cos/venue-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -382,7 +356,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/post-info/page', {
+      this.$get('/cos/venue-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

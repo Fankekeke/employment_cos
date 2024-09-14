@@ -7,17 +7,17 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="求职者名称"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                label="学生名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
              <a-col :md="6" :sm="24">
               <a-form-item
                 label="企业名称"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.enterpriseName"/>
               </a-form-item>
             </a-col>
@@ -34,27 +34,6 @@
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <a-tabs default-active-key="1" @change="callback">
-        <a-tab-pane key="1" tab="兼职">
-          <!-- 表格区域 -->
-          <a-table ref="TableInfo"
-                   :columns="columns"
-                   :rowKey="record => record.id"
-                   :dataSource="dataSource"
-                   :pagination="pagination"
-                   :loading="loading"
-                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-                   :scroll="{ x: 900 }"
-                   @change="handleTableChange">
-            <template slot="avatarShow" slot-scope="text, record">
-              <template>
-                <img alt="头像" :src="'static/avatar/' + text">
-              </template>
-            </template>
-            <template slot="operation" slot-scope="text, record">
-              <a-icon type="pushpin" @click="handleClose(record)" title="删 除" v-if="record.status != 3 && record.status != 5"></a-icon>
-            </template>
-          </a-table>
-        </a-tab-pane>
         <a-tab-pane key="2" tab="岗位">
           <!-- 表格区域 -->
           <a-table ref="TableInfo"
@@ -122,13 +101,13 @@ export default {
     }),
     columns () {
       return [{
-        title: '求职者名称',
+        title: '学生名称',
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
         dataIndex: 'enterName'
       }, {
-        title: '求职者头像',
+        title: '学生头像',
         dataIndex: 'expertImages',
         customRender: (text, record, index) => {
           if (!record.expertImages) return <a-avatar shape="square" icon="user" />
@@ -204,13 +183,13 @@ export default {
     },
     postColumns () {
       return [ {
-        title: '求职者名称',
+        title: '学生名称',
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
         dataIndex: 'enterName'
       }, {
-        title: '求职者头像',
+        title: '学生头像',
         dataIndex: 'expertImages',
         customRender: (text, record, index) => {
           if (!record.expertImages) return <a-avatar shape="square" icon="user" />
@@ -269,7 +248,7 @@ export default {
     }
   },
   mounted () {
-    this.fetch({type: 1})
+    this.fetch({type: 2})
   },
   methods: {
     handleClose (row) {

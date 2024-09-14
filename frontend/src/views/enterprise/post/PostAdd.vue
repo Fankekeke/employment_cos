@@ -18,7 +18,7 @@
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="8">
+        <a-col :span="16">
           <a-form-item label='工作地点' v-bind="formItemLayout">
             <a-input v-decorator="[
             'address',
@@ -99,7 +99,7 @@
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="16">
+        <a-col :span="24">
           <a-form-item label='工作要求' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
             'workRequire',

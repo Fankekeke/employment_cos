@@ -1,14 +1,15 @@
 <template>
   <a-row :gutter="20">
+    <a-col :span="8"></a-col>
     <a-col :span="16">
       <a-card :loading="loading" :bordered="false">
         <a-form :form="form" layout="vertical">
           <a-row :gutter="20">
             <a-col :span="12">
-              <a-form-item label='求职者姓名' v-bind="formItemLayout">
+              <a-form-item label='学生姓名' v-bind="formItemLayout">
                 <a-input v-decorator="[
             'name',
-            { rules: [{ required: true, message: '请输入求职者姓名!' }] }
+            { rules: [{ required: true, message: '请输入学生姓名!' }] }
             ]"/>
               </a-form-item>
             </a-col>
@@ -126,7 +127,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label='求职者头像' v-bind="formItemLayout">
+              <a-form-item label='学生头像' v-bind="formItemLayout">
                 <a-upload
                   name="avatar"
                   action="http://127.0.0.1:9527/file/fileUpload/"
@@ -192,11 +193,11 @@ export default {
     }
   },
   mounted () {
-    this.getExpertInfo(this.currentUser.userCode)
+    this.getExpertInfo(this.currentUser.userId)
   },
   methods: {
     getExpertInfo (expertCode) {
-      this.$get(`/cos/expert-info/detail/code/${expertCode}`).then((r) => {
+      this.$get(`/cos/expert-info/detail/id/${expertCode}`).then((r) => {
         this.expertInfo = r.data.data
         console.log(this.expertInfo)
         this.setFormValues(this.expertInfo)

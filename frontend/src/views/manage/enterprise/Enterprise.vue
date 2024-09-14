@@ -138,7 +138,8 @@ export default {
     columns () {
       return [{
         title: '企业名称',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        ellipsis: true
       }, {
         title: '单位简称',
         dataIndex: 'abbreviation',
@@ -148,7 +149,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '统一社会信用代码',
         dataIndex: 'creditCode',
@@ -158,7 +160,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '单位性质',
         dataIndex: 'nature',
@@ -168,7 +171,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '经营状态',
         dataIndex: 'status',
@@ -208,7 +212,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',

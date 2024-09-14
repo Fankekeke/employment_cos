@@ -8,8 +8,8 @@
             <a-col :md="6" :sm="24">
               <a-form-item
                 label="项目名称"
-                :labelCol="{span: 4}"
-                :wrapperCol="{span: 18, offset: 2}">
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.productName"/>
               </a-form-item>
             </a-col>
@@ -150,10 +150,10 @@ export default {
     }),
     columns () {
       return [{
-        title: '求职者编号',
+        title: '学生编号',
         dataIndex: 'expertCode'
       }, {
-        title: '求职者名称',
+        title: '学生名称',
         dataIndex: 'expertName',
         customRender: (text, row, index) => {
           if (text !== null) {

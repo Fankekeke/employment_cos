@@ -13,7 +13,15 @@
                 <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
-             <a-col :md="6" :sm="24">
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="会场名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.venueName"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
               <a-form-item
                 label="企业名称"
                 :labelCol="{span: 5}"
@@ -24,65 +32,88 @@
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
+            <a-button style="margin-left: 8px" @click="reset">重置</a-button>
           </span>
         </a-row>
       </a-form>
     </div>
     <div>
       <div class="operator">
-        <!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
-      <a-tabs default-active-key="1" @change="callback">
-        <a-tab-pane key="2" tab="岗位">
-          <!-- 表格区域 -->
-          <a-table ref="TableInfo"
-                   :columns="postColumns"
-                   :rowKey="record => record.id"
-                   :dataSource="dataSource"
-                   :pagination="pagination"
-                   :loading="loading"
-                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-                   :scroll="{ x: 900 }"
-                   @change="handleTableChange">
-            <template slot="avatarShow" slot-scope="text, record">
-              <template>
-                <img alt="头像" :src="'static/avatar/' + text">
+      <!-- 表格区域 -->
+      <a-table ref="TableInfo"
+               :columns="columns"
+               :rowKey="record => record.id"
+               :dataSource="dataSource"
+               :pagination="pagination"
+               :loading="loading"
+               :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+               :scroll="{ x: 900 }"
+               @change="handleTableChange">
+        <template slot="titleShow" slot-scope="text, record">
+          <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.title }}
               </template>
-            </template>
-            <template slot="operation" slot-scope="text, record">
-              <a-icon type="cloud" @click="handleViewOpen(record)" title="详 情"></a-icon>
-            </template>
-          </a-table>
-        </a-tab-pane>
-      </a-tabs>
+              {{ record.title.slice(0, 8) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="contentShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.content }}
+              </template>
+              {{ record.content.slice(0, 25) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+        </template>
+      </a-table>
     </div>
-    <audit-view
-      @close="handleViewClose"
-      @success="handleViewSuccess"
-      :pluralismShow="interView.visiable"
-      :pluralismData="interView.data">
-    </audit-view>
+    <reserve-add
+      v-if="reserveAdd.visiable"
+      @close="handlereserveAddClose"
+      @success="handlereserveAddSuccess"
+      :reserveAddVisiable="reserveAdd.visiable">
+    </reserve-add>
+    <reserve-edit
+      ref="reserveEdit"
+      @close="handlereserveEditClose"
+      @success="handlereserveEditSuccess"
+      :reserveEditVisiable="reserveEdit.visiable">
+    </reserve-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
+import reserveAdd from './ReserveAdd.vue'
+import reserveEdit from './ReserveEdit.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import AuditView from './AuditView.vue'
 moment.locale('zh-cn')
 
 export default {
-  name: 'User',
-  components: {AuditView, RangeDate},
+  name: 'reserve',
+  components: {reserveAdd, reserveEdit, RangeDate},
   data () {
     return {
-      interView: {
-        visiable: false,
-        data: null
-      },
       advanced: false,
+      reserveAdd: {
+        visiable: false
+      },
+      reserveEdit: {
+        visiable: false
+      },
       queryParams: {},
       filteredInfo: null,
       sortedInfo: null,
@@ -98,8 +129,7 @@ export default {
         showSizeChanger: true,
         showTotal: (total, range) => `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`
       },
-      userList: [],
-      currentKey: 1
+      userList: []
     }
   },
   computed: {
@@ -108,79 +138,94 @@ export default {
     }),
     columns () {
       return [{
+        title: '所属企业',
+        dataIndex: 'enterpriseName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '企业照片',
+        dataIndex: 'logo',
+        customRender: (text, record, index) => {
+          if (!record.logo) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '会场名称',
+        dataIndex: 'venueName',
+        ellipsis: true
+      }, {
+        title: '详细地址',
+        dataIndex: 'address',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '开始/结束时间',
+        dataIndex: 'startDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return row.startDate + ' ~ ' + row.endDate
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '状态',
+        dataIndex: 'status',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag>未审核</a-tag>
+            case '1':
+              return <a-tag color="blue">已通过</a-tag>
+            case '2':
+              return <a-tag color="red">未通过</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
         title: '学生名称',
-        dataIndex: 'expertName'
+        dataIndex: 'expertName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
       }, {
-        title: '企业名称',
-        dataIndex: 'enterName'
-      }, {
-        title: '学生头像',
+        title: '学生照片',
         dataIndex: 'expertImages',
         customRender: (text, record, index) => {
           if (!record.expertImages) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
           </a-popover>
         }
       }, {
-        title: '企业头像',
-        dataIndex: 'enterImages',
-        customRender: (text, record, index) => {
-          if (!record.enterImages) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.enterImages } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.enterImages } />
-          </a-popover>
-        }
-      }, {
-        title: '面试状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>已投递</a-tag>
-            case 2:
-              return <a-tag>已查看</a-tag>
-            case 3:
-              return <a-tag color="red">不符合</a-tag>
-            case 4:
-              return <a-tag color="black">邀约面试</a-tag>
-            case 5:
-              return <a-tag>面试结束</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '岗位名称',
-        dataIndex: 'postName'
-      }, {
-        title: '结算方式',
-        dataIndex: 'paymentMethod',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>日结</a-tag>
-            case 2:
-              return <a-tag>周结</a-tag>
-            case 3:
-              return <a-tag>月结</a-tag>
-            case 4:
-              return <a-tag>季结</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '薪资',
-        dataIndex: 'salary'
-      }, {
-        title: '面试时间',
+        title: '提交时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -188,79 +233,8 @@ export default {
           } else {
             return '- -'
           }
-        }
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
-      }]
-    },
-    postColumns () {
-      return [ {
-        title: '学生名称',
-        dataIndex: 'expertName'
-      }, {
-        title: '企业名称',
-        dataIndex: 'enterName'
-      }, {
-        title: '学生头像',
-        dataIndex: 'expertImages',
-        customRender: (text, record, index) => {
-          if (!record.expertImages) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages } />
-          </a-popover>
-        }
-      }, {
-        title: '企业头像',
-        dataIndex: 'enterImages',
-        customRender: (text, record, index) => {
-          if (!record.enterImages) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.enterImages } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.enterImages } />
-          </a-popover>
-        }
-      }, {
-        title: '面试状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>已投递</a-tag>
-            case 2:
-              return <a-tag>已查看</a-tag>
-            case 3:
-              return <a-tag color="red">不符合</a-tag>
-            case 4:
-              return <a-tag color="black">邀约面试</a-tag>
-            case 5:
-              return <a-tag>面试结束</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '岗位名称',
-        dataIndex: 'postName'
-      }, {
-        title: '薪资',
-        dataIndex: 'salary'
-      }, {
-        title: '面试时间',
-        dataIndex: 'createDate',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -269,33 +243,37 @@ export default {
     }
   },
   mounted () {
-    this.fetch({type: 2})
+    this.fetch()
   },
   methods: {
-    handleViewClose () {
-      this.interView.visiable = false
-    },
-    handleViewSuccess () {
-      this.$message.success('更新成功')
-      this.interView.visiable = false
-      this.search()
-    },
-    handleViewOpen (row) {
-      this.interView.data = row
-      this.interView.visiable = true
-    },
-    view (row) {
-      this.userView.data = row
-      this.userView.visiable = true
-    },
-    handleUserViewClose () {
-      this.userView.visiable = false
-    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
+    },
+    add () {
+      this.reserveAdd.visiable = true
+    },
+    handlereserveAddClose () {
+      this.reserveAdd.visiable = false
+    },
+    handlereserveAddSuccess () {
+      this.reserveAdd.visiable = false
+      this.$message.success('新增预约成功')
+      this.search()
+    },
+    edit (record) {
+      this.$refs.reserveEdit.setFormValues(record)
+      this.reserveEdit.visiable = true
+    },
+    handlereserveEditClose () {
+      this.reserveEdit.visiable = false
+    },
+    handlereserveEditSuccess () {
+      this.reserveEdit.visiable = false
+      this.$message.success('修改预约成功')
+      this.search()
     },
     handleDeptChange (value) {
       this.queryParams.deptId = value || ''
@@ -312,7 +290,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/interview-info/' + ids).then(() => {
+          that.$delete('/cos/reserve-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -332,7 +310,6 @@ export default {
         sortOrder = sortedInfo.order
       }
       this.fetch({
-        type: this.currentKey,
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -369,10 +346,6 @@ export default {
         ...filters
       })
     },
-    callback (key) {
-      this.currentKey = key
-      this.fetch({type: key})
-    },
     fetch (params = {}) {
       // 显示loading
       this.loading = true
@@ -387,8 +360,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      params.enterpriseId = this.currentUser.userId
-      this.$get('/cos/interview-info/page', {
+      this.$get('/cos/reserve-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

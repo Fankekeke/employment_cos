@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="新增项目成果" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="新增预约" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -11,47 +11,42 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
         <a-col :span="12">
-          <a-form-item label='所属学生' v-bind="formItemLayout">
+          <a-form-item label='预约标题' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'title',
+            { rules: [{ required: true, message: '请输入名称!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='上传人' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'publisher',
+            { rules: [{ required: true, message: '请输入上传人!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='预约状态' v-bind="formItemLayout">
             <a-select v-decorator="[
-            'expertCode',
-            { rules: [{ required: true, message: '请输入所属学生!' }] }
-            ]" disabled>
-              <a-select-option v-for="(item, index) in expertList" :key="index" :value="item.code">{{ item.name }}</a-select-option>
+              'rackUp',
+              { rules: [{ required: true, message: '请输入预约状态!' }] }
+              ]">
+              <a-select-option value="0">下架</a-select-option>
+              <a-select-option value="1">已发布</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
-          <a-form-item label='项目名称' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'productName',
-            { rules: [{ required: true, message: '请输入项目名称!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='内容研究' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'research'
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='关键技术' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'technology'
-            ]"/>
-          </a-form-item>
-        </a-col>
         <a-col :span="24">
-          <a-form-item label='项目内容' v-bind="formItemLayout">
+          <a-form-item label='预约内容' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
             'content',
-             { rules: [{ required: true, message: '请输入项目内容!' }] }
+             { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='项目图册' v-bind="formItemLayout">
+          <a-form-item label='图册' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -92,9 +87,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 }
 }
 export default {
-  name: 'productAdd',
+  name: 'reserveAdd',
   props: {
-    productAddVisiable: {
+    reserveAddVisiable: {
       default: false
     }
   },
@@ -104,7 +99,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.productAddVisiable
+        return this.reserveAddVisiable
       },
       set: function () {
       }
@@ -117,28 +112,10 @@ export default {
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: '',
-      expertList: []
-    }
-  },
-  mounted () {
-    this.getExpertList()
-  },
-  watch: {
-    productAddVisiable: function (value) {
-      if (value) {
-        setTimeout(() => {
-          this.form.setFieldsValue({expertCode: this.currentUser.userCode})
-        }, 100)
-      }
+      previewImage: ''
     }
   },
   methods: {
-    getExpertList () {
-      this.$get(`/cos/expert-info/list`).then((r) => {
-        this.expertList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -170,7 +147,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$post('/cos/expert-product', {
+          this.$post('/cos/reserve-info', {
             ...values
           }).then((r) => {
             this.reset()

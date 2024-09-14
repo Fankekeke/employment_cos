@@ -6,12 +6,14 @@ import cc.mrbird.febs.cos.entity.EnterpriseInfo;
 import cc.mrbird.febs.cos.entity.VenueInfo;
 import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
 import cc.mrbird.febs.cos.service.IVenueInfoService;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,6 +77,7 @@ public class VenueInfoController {
         if (enterpriseInfo != null) {
             venueInfo.setEnterpriseId(enterpriseInfo.getId());
         }
+        venueInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(venueInfoService.save(venueInfo));
     }
 

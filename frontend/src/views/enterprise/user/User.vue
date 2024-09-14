@@ -1,11 +1,12 @@
 <template>
   <a-row :gutter="20">
+    <a-col :span="8"></a-col>
     <a-col :span="16">
       <a-card :loading="loading" :bordered="false">
         <a-form :form="form" layout="vertical">
           <a-row :gutter="20">
             <a-col :span="8">
-              <a-form-item label='功能供应商名称' v-bind="formItemLayout">
+              <a-form-item label='企业名称' v-bind="formItemLayout">
                 <a-input v-decorator="[
             'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
@@ -227,11 +228,11 @@ export default {
     }
   },
   mounted () {
-    this.getEnterpriseInfo(this.currentUser.userCode)
+    this.getEnterpriseInfo(this.currentUser.userId)
   },
   methods: {
-    getEnterpriseInfo (expertCode) {
-      this.$get(`/cos/enterprise-info/detail/code/${expertCode}`).then((r) => {
+    getEnterpriseInfo (expertId) {
+      this.$get(`/cos/enterprise-info/detail/id/${expertId}`).then((r) => {
         this.enterpriseInfo = r.data.data
         console.log(this.enterpriseInfo)
         this.setFormValues(this.enterpriseInfo)

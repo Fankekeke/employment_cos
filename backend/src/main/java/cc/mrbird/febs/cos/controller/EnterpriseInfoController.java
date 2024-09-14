@@ -96,6 +96,17 @@ public class EnterpriseInfoController {
     }
 
     /**
+     * 根据ID查询企业信息
+     *
+     * @param enterpriseId 企业编号
+     * @return 结果
+     */
+    @GetMapping("/detail/id/{enterpriseId}")
+    public R detailById(@PathVariable("enterpriseId") Integer enterpriseId) {
+        return R.ok(enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, enterpriseId)));
+    }
+
+    /**
      * 下载模板
      */
     @GetMapping("/template")

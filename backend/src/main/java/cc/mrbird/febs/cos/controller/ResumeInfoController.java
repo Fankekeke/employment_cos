@@ -6,12 +6,14 @@ import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.entity.ResumeInfo;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IResumeInfoService;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -74,6 +76,7 @@ public class ResumeInfoController {
         if (expertInfo != null) {
             resumeInfo.setStudentId(expertInfo.getId());
         }
+        resumeInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(resumeInfoService.save(resumeInfo));
     }
 

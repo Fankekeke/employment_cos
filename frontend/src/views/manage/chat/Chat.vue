@@ -111,9 +111,6 @@ export default {
     }),
     columns () {
       return [{
-        title: '',
-        dataIndex: 'content'
-      }, {
         title: '学生名称',
         dataIndex: 'expertName'
       }, {

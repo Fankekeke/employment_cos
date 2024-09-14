@@ -58,4 +58,7 @@ public class ChatInfo implements Serializable {
 
     @TableField(exist = true)
     private String enterpriseName;
+
+    @TableField(exist = true)
+    private String abbreviation;
 }

@@ -124,7 +124,7 @@ export default {
       }, {
         title: '消息内容',
         dataIndex: 'content',
-        scopedSlots: {customRender: 'contentShow'}
+        width: 500
       }, {
         title: '发送时间',
         dataIndex: 'createDate'

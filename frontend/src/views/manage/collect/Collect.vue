@@ -35,20 +35,20 @@
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <a-tabs default-active-key="1" @change="callback">
-        <a-tab-pane key="2" tab="收藏兼职">
-          <!-- 表格区域 -->
-          <a-table ref="TableInfo"
-                   :columns="pluralismColumns"
-                   :rowKey="record => record.id"
-                   :dataSource="dataSource"
-                   :pagination="pagination"
-                   :loading="loading"
-                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-                   :scroll="{ x: 900 }"
-                   @change="handleTableChange">
-          </a-table>
-        </a-tab-pane>
-        <a-tab-pane key="3" tab="收藏岗位">
+<!--        <a-tab-pane key="2" tab="收藏兼职">-->
+<!--          &lt;!&ndash; 表格区域 &ndash;&gt;-->
+<!--          <a-table ref="TableInfo"-->
+<!--                   :columns="pluralismColumns"-->
+<!--                   :rowKey="record => record.id"-->
+<!--                   :dataSource="dataSource"-->
+<!--                   :pagination="pagination"-->
+<!--                   :loading="loading"-->
+<!--                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"-->
+<!--                   :scroll="{ x: 900 }"-->
+<!--                   @change="handleTableChange">-->
+<!--          </a-table>-->
+<!--        </a-tab-pane>-->
+        <a-tab-pane key="3" tab="岗位">
           <!-- 表格区域 -->
           <a-table ref="TableInfo"
                    :columns="postColumns"
@@ -288,7 +288,7 @@ export default {
     }
   },
   mounted () {
-    this.fetch({type: 2})
+    this.fetch({type: 3})
   },
   methods: {
     view (row) {

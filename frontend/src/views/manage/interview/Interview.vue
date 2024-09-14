@@ -34,26 +34,26 @@
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <a-tabs default-active-key="1" @change="callback">
-        <a-tab-pane key="1" tab="兼职">
-          <!-- 表格区域 -->
-          <a-table ref="TableInfo"
-                   :columns="columns"
-                   :rowKey="record => record.id"
-                   :dataSource="dataSource"
-                   :pagination="pagination"
-                   :loading="loading"
-                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-                   :scroll="{ x: 900 }"
-                   @change="handleTableChange">
-            <template slot="avatarShow" slot-scope="text, record">
-              <template>
-                <img alt="头像" :src="'static/avatar/' + text">
-              </template>
-            </template>
-            <template slot="operation" slot-scope="text, record">
-            </template>
-          </a-table>
-        </a-tab-pane>
+<!--        <a-tab-pane key="1" tab="兼职">-->
+<!--          &lt;!&ndash; 表格区域 &ndash;&gt;-->
+<!--          <a-table ref="TableInfo"-->
+<!--                   :columns="columns"-->
+<!--                   :rowKey="record => record.id"-->
+<!--                   :dataSource="dataSource"-->
+<!--                   :pagination="pagination"-->
+<!--                   :loading="loading"-->
+<!--                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"-->
+<!--                   :scroll="{ x: 900 }"-->
+<!--                   @change="handleTableChange">-->
+<!--            <template slot="avatarShow" slot-scope="text, record">-->
+<!--              <template>-->
+<!--                <img alt="头像" :src="'static/avatar/' + text">-->
+<!--              </template>-->
+<!--            </template>-->
+<!--            <template slot="operation" slot-scope="text, record">-->
+<!--            </template>-->
+<!--          </a-table>-->
+<!--        </a-tab-pane>-->
         <a-tab-pane key="2" tab="岗位">
           <!-- 表格区域 -->
           <a-table ref="TableInfo"
@@ -259,7 +259,7 @@ export default {
     }
   },
   mounted () {
-    this.fetch({type: 1})
+    this.fetch({type: 2})
   },
   methods: {
     view (row) {

@@ -63,6 +63,17 @@ public class ExpertInfoController {
     }
 
     /**
+     * 根据专家Id查询详情
+     *
+     * @param expertId 专家编号
+     * @return 结果
+     */
+    @GetMapping("/detail/id/{expertId}")
+    public R detailByCode(@PathVariable("expertId") Integer expertId) {
+        return R.ok(expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, expertId)));
+    }
+
+    /**
      * 下载模板
      */
     @GetMapping("/template")
