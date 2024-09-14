@@ -6,13 +6,16 @@ import cc.mrbird.febs.cos.entity.CollectInfo;
 import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.service.ICollectInfoService;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 企业收藏 控制层
@@ -38,6 +41,32 @@ public class CollectInfoController {
     @GetMapping("/page")
     public R page(Page<CollectInfo> page, CollectInfo collectInfo) {
         return R.ok(collectInfoService.selectCollectPage(page, collectInfo));
+    }
+
+    /**
+     * 根据用户获取收藏岗位
+     *
+     * @param userId 学生ID
+     * @return 结果
+     */
+    @GetMapping("/queryCollectByUser/{userId}")
+    public R queryCollectByUser(@PathVariable("userId") Integer userId) {
+        ExpertInfo expertInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, userId));
+        List<CollectInfo> collectList = collectInfoService.list(Wrappers.<CollectInfo>lambdaQuery().eq(CollectInfo::getType, 3)
+                .eq(CollectInfo::getExpertId, expertInfo.getId()));
+        return R.ok(CollectionUtil.isEmpty(collectList) ? Collections.emptyList() : collectList.stream().map(CollectInfo::getBaseId).collect(Collectors.toList()));
+    }
+
+    /**
+     * 取消岗位收藏
+     * @param collectInfo 收藏信息
+     * @return 结果
+     */
+    @PutMapping("/sendNotCollect")
+    public R sendNotCollect(CollectInfo collectInfo) {
+        ExpertInfo expertInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, collectInfo.getExpertId()));
+        return R.ok(collectInfoService.remove(Wrappers.<CollectInfo>lambdaQuery()
+                .eq(CollectInfo::getBaseId, collectInfo.getBaseId()).eq(CollectInfo::getExpertId, expertInfo.getId())));
     }
 
     /**

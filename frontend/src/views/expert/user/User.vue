@@ -261,7 +261,7 @@ export default {
           }).then((r) => {
             this.$message.success('更新成功')
             this.loading = false
-            this.getExpertInfo(this.currentUser.userCode)
+            this.getExpertInfo(this.currentUser.userId)
           }).catch(() => {
             this.loading = false
           })

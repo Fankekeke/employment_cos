@@ -296,7 +296,7 @@ export default {
           }).then((r) => {
             this.$message.success('更新成功')
             this.loading = false
-            this.getEnterpriseInfo(this.currentUser.userCode)
+            this.getEnterpriseInfo(this.currentUser.userId)
           }).catch(() => {
             this.loading = false
           })

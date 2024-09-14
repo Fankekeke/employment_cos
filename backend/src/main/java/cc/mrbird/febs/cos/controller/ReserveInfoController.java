@@ -4,8 +4,10 @@ package cc.mrbird.febs.cos.controller;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.entity.ReserveInfo;
+import cc.mrbird.febs.cos.entity.ResumeInfo;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IReserveInfoService;
+import cc.mrbird.febs.cos.service.IResumeInfoService;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -29,6 +31,8 @@ public class ReserveInfoController {
     private final IReserveInfoService reserveInfoService;
 
     private final IExpertInfoService expertInfoService;
+
+    private final IResumeInfoService resumeInfoService;
 
     /**
      * 分页获取学生会场预约信息
@@ -88,6 +92,12 @@ public class ReserveInfoController {
         }
         // 审核状态
         reserveInfo.setStatus("0");
+        // 学生简历
+        ResumeInfo resumeInfo = resumeInfoService.getOne(Wrappers.<ResumeInfo>lambdaQuery().eq(ResumeInfo::getStudentId, reserveInfo.getStudentId())
+                .eq(ResumeInfo::getDefaultFlag, "1"));
+        if (resumeInfo != null) {
+            reserveInfo.setResumeId(resumeInfo.getId());
+        }
         // 提交时间
         reserveInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(reserveInfoService.save(reserveInfo));
@@ -102,7 +112,8 @@ public class ReserveInfoController {
      */
     @GetMapping("/audit")
     public R audit(Integer id, String status) {
-        return R.ok(reserveInfoService.update(Wrappers.<ReserveInfo>lambdaUpdate().set(ReserveInfo::getStatus, status).eq(ReserveInfo::getId, id)));
+        return R.ok(reserveInfoService.update(Wrappers.<ReserveInfo>lambdaUpdate().set(ReserveInfo::getStatus, status)
+                .set(ReserveInfo::getAuditDate, DateUtil.formatDateTime(new Date())).eq(ReserveInfo::getId, id)));
     }
 
     /**

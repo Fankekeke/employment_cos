@@ -18,7 +18,18 @@
         ei2.nature,
         ed.logo,
         ei.name as expertName,
-        ei.images as expertImages
+        ei.images as expertImages,
+        post_info.post_name,
+        post_info.address,
+        post_info.experience,
+        post_info.responsibility,
+        post_info.academic,
+        post_info.work_time,
+        post_info.work_hour,
+        post_info.work_address,
+        post_info.work_require,
+        post_info.salary,
+        post_info.welfare
         from
         interview_info ini
         left join expert_info ei on
@@ -27,6 +38,7 @@
         (ei2.id = ini.enterprise_id)
         left join enterprise_detail ed on
         (ed.enterprise_id = ei2.id)
+        left join post_info on (post_info.id = ini.base_id)
         where
         1 = 1
         <if test="interviewInfo.enterpriseName != null and interviewInfo.enterpriseName != ''">

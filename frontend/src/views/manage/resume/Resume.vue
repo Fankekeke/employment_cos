@@ -31,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -166,6 +166,19 @@ export default {
             </template>
             <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
           </a-popover>
+        }
+      }, {
+        title: '是否默认',
+        dataIndex: 'defaultFlag',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag>否</a-tag>
+            case '1':
+              return <a-tag color="blue">是</a-tag>
+            default:
+              return '- -'
+          }
         }
       }, {
         title: '创建时间',

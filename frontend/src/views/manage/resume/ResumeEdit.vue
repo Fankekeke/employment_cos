@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="修改简历" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="修改简历" @cancel="onClose" :width="600">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -10,34 +10,48 @@
     </template>
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
-        <a-col :span="12">
+        <a-col :span="24">
           <a-form-item label='简历名称' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'title',
+            'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
+          <a-form-item label='默认简历' v-bind="formItemLayout">
+            <a-radio-group v-decorator="[
+            'defaultFlag',
+            { rules: [{ required: true, message: '请输入默认简历!' }] }
+            ]">
+              <a-radio-button value="0">
+                否
+              </a-radio-button>
+              <a-radio-button value="1">
+                是
+              </a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
+        <a-col :span="24">
           <a-form-item label='简历附件' v-bind="formItemLayout">
-            <a-upload
+            <a-upload-dragger
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
-              list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"
               @change="picHandleChange"
             >
-              <div v-if="fileList.length < 8">
-                <a-icon type="plus" />
-                <div class="ant-upload-text">
-                  Upload
-                </div>
-              </div>
-            </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-              <img alt="example" style="width: 100%" :src="previewImage" />
-            </a-modal>
+              <p class="ant-upload-drag-icon">
+                <a-icon type="inbox" />
+              </p>
+              <p class="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p class="ant-upload-hint">
+                Support for a single or bulk upload.
+              </p>
+            </a-upload-dragger>
           </a-form-item>
         </a-col>
       </a-row>
@@ -114,15 +128,12 @@ export default {
     },
     setFormValues ({...resume}) {
       this.rowId = resume.id
-      let fields = ['title', 'content', 'publisher', 'rackUp']
+      let fields = ['name', 'defaultFlag']
       let obj = {}
       Object.keys(resume).forEach((key) => {
-        if (key === 'images') {
+        if (key === 'fileUrl') {
           this.fileList = []
-          this.imagesInit(resume['images'])
-        }
-        if (key === 'rackUp') {
-          resume[key] = resume[key].toString()
+          this.imagesInit(resume['fileUrl'])
         }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
@@ -151,7 +162,7 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.id = this.rowId
-        values.images = images.length > 0 ? images.join(',') : null
+        values.fileUrl = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
           this.$put('/cos/resume-info', {

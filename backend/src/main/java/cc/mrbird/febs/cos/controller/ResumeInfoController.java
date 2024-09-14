@@ -76,6 +76,10 @@ public class ResumeInfoController {
         if (expertInfo != null) {
             resumeInfo.setStudentId(expertInfo.getId());
         }
+        if ("1".equals(resumeInfo.getDefaultFlag())) {
+            resumeInfoService.update(Wrappers.<ResumeInfo>lambdaUpdate().set(ResumeInfo::getDefaultFlag, "0")
+                    .eq(ResumeInfo::getStudentId, resumeInfo.getStudentId()));
+        }
         resumeInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(resumeInfoService.save(resumeInfo));
     }
@@ -88,6 +92,11 @@ public class ResumeInfoController {
      */
     @PutMapping
     public R edit(ResumeInfo resumeInfo) {
+        ResumeInfo resumeInfo1 = resumeInfoService.getById(resumeInfo.getId());
+        if ("1".equals(resumeInfo.getDefaultFlag())) {
+            resumeInfoService.update(Wrappers.<ResumeInfo>lambdaUpdate().set(ResumeInfo::getDefaultFlag, "0")
+                    .eq(ResumeInfo::getStudentId, resumeInfo1.getStudentId()));
+        }
         return R.ok(resumeInfoService.updateById(resumeInfo));
     }
 

@@ -16,12 +16,24 @@
         ei.nature,
         ed.logo,
         ei2.name as expertName,
-        ei2.images as expertImages
+        ei2.images as expertImages,
+        post_info.post_name,
+        post_info.address,
+        post_info.experience,
+        post_info.responsibility,
+        post_info.academic,
+        post_info.work_time,
+        post_info.work_hour,
+        post_info.work_address,
+        post_info.work_require,
+        post_info.salary,
+        post_info.welfare
         from
         collect_info ci
-        left join enterprise_info ei on (ei.code = ci.enterprise_code)
+        left join enterprise_info ei on (ei.id = ci.enterprise_id)
         left join enterprise_detail ed on (ed.enterprise_id = ei.id)
         left join expert_info ei2 on (ei2.code = ci.expert_code)
+        left join post_info on (post_info.id = ci.base_id)
         where
         1 = 1
         <if test="collectInfo.enterpriseName != null and collectInfo.enterpriseName != ''">

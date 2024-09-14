@@ -11,6 +11,7 @@
         ri.file_url,
         ri.create_date,
         ri.student_id,
+        ri.default_flag,
         ei.name as expertName,
         ei.images as expertImages
         from

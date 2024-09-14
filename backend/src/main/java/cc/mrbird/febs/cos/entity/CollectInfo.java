@@ -41,7 +41,7 @@ public class CollectInfo implements Serializable {
     /**
      * 关联信息
      */
-    private String baseId;
+    private Integer baseId;
 
     /**
      * 创建时间

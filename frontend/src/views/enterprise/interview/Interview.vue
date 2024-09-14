@@ -13,7 +13,7 @@
                 <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
-             <a-col :md="6" :sm="24">
+            <a-col :md="6" :sm="24">
               <a-form-item
                 label="企业名称"
                 :labelCol="{span: 5}"
@@ -75,10 +75,14 @@ moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {AuditView, RangeDate},
+  components: {RangeDate, AuditView},
   data () {
     return {
       interView: {
+        visiable: false,
+        data: null
+      },
+      userView: {
         visiable: false,
         data: null
       },
@@ -147,9 +151,9 @@ export default {
             case 2:
               return <a-tag>已查看</a-tag>
             case 3:
-              return <a-tag color="red">不符合</a-tag>
+              return <a-tag>不符合</a-tag>
             case 4:
-              return <a-tag color="black">邀约面试</a-tag>
+              return <a-tag>邀约面试</a-tag>
             case 5:
               return <a-tag>面试结束</a-tag>
             default:
@@ -181,14 +185,7 @@ export default {
         dataIndex: 'salary'
       }, {
         title: '面试时间',
-        dataIndex: 'createDate',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        dataIndex: 'createDate'
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -201,7 +198,7 @@ export default {
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
-        dataIndex: 'enterName'
+        dataIndex: 'enterpriseName'
       }, {
         title: '学生头像',
         dataIndex: 'expertImages',
@@ -236,9 +233,9 @@ export default {
             case 2:
               return <a-tag>已查看</a-tag>
             case 3:
-              return <a-tag color="red">不符合</a-tag>
+              return <a-tag>不符合</a-tag>
             case 4:
-              return <a-tag color="black">邀约面试</a-tag>
+              return <a-tag>邀约面试</a-tag>
             case 5:
               return <a-tag>面试结束</a-tag>
             default:
@@ -253,14 +250,7 @@ export default {
         dataIndex: 'salary'
       }, {
         title: '面试时间',
-        dataIndex: 'createDate',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        dataIndex: 'createDate'
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -283,6 +273,13 @@ export default {
     handleViewOpen (row) {
       this.interView.data = row
       this.interView.visiable = true
+    },
+    handleClose (row) {
+      row.status = 5
+      this.$post(`/cos/interview-info/audit`, {...row}).then((r) => {
+        this.$message.success('撤销成功')
+        this.search()
+      })
     },
     view (row) {
       this.userView.data = row

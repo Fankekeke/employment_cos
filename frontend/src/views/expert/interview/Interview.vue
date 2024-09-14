@@ -187,7 +187,7 @@ export default {
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
-        dataIndex: 'enterName'
+        dataIndex: 'enterpriseName'
       }, {
         title: '学生头像',
         dataIndex: 'expertImages',

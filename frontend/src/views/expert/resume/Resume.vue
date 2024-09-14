@@ -168,6 +168,19 @@ export default {
           </a-popover>
         }
       }, {
+        title: '是否默认',
+        dataIndex: 'defaultFlag',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '0':
+              return <a-tag>否</a-tag>
+            case '1':
+              return <a-tag color="blue">是</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
         title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {

@@ -60,9 +60,10 @@
               <a @click="chat(item)">【联系】</a>
             </div>
             <template slot="actions" class="ant-card-actions">
-              <a-icon key="folder-add" type="folder-add" @click="sendInter(item)">投递</a-icon>
-              <a-icon key="contacts" type="contacts" @click="rentDetail(item)">详情</a-icon>
-              <a-icon key="heart" type="heart" @click="sendCollect(item)">收藏</a-icon>
+              <div @click="sendInter(item)"><a-icon key="folder-add" type="folder-add"/> 投递</div>
+              <div @click="rentDetail(item)"><a-icon key="contacts" type="contacts"/> 详情</div>
+              <div v-if="checkCollect(item.id)" @click="sendNotCollect(item)"><a-icon type="heart" style="cursor: pointer;color: red" /> 取消</div>
+              <div v-else @click="sendCollect(item)"><a-icon type="heart" style="cursor: pointer;" /> 收藏</div>
             </template>
           </a-card>
         </div>
@@ -81,6 +82,7 @@ export default {
   data () {
     return {
       rentList: [],
+      collectList: [],
       rentView: {
         visiable: false,
         data: null
@@ -95,8 +97,20 @@ export default {
   },
   mounted () {
     this.selectRentList()
+    this.queryCollect()
   },
   methods: {
+    checkCollect (furnitureId) {
+      if (this.collectList.length === 0) {
+        return false
+      }
+      return this.collectList.some(item => item == furnitureId)
+    },
+    queryCollect () {
+      this.$get(`/cos/collect-info/queryCollectByUser/${this.currentUser.userId}`).then((r) => {
+        this.collectList = r.data.data
+      })
+    },
     chat (item) {
       this.$post(`/cos/chat-info`, {
         expertCode: this.currentUser.userCode,
@@ -116,14 +130,24 @@ export default {
       this.rentView.visiable = true
       this.rentView.data = row
     },
+    sendNotCollect (row) {
+      this.$put('/cos/collect-info/sendNotCollect', {
+        expertId: this.currentUser.userId,
+        baseId: row.id
+      }).then((r) => {
+        this.$message.success('取消收藏成功')
+        this.queryCollect()
+      })
+    },
     sendCollect (row) {
       this.$post('/cos/collect-info', {
-        expertCode: this.currentUser.userId,
+        expertId: this.currentUser.userId,
         baseId: row.id,
         type: 3,
         enterpriseId: row.enterpriseId
       }).then((r) => {
         this.$message.success('收藏成功')
+        this.queryCollect()
       })
     },
     sendInter (row) {
@@ -140,7 +164,6 @@ export default {
       params.delFlag = 1
       this.$get('/cos/post-info/page', {...params}).then((r) => {
         this.rentList = r.data.data.records
-        console.log(this.rentList)
       })
     }
   }

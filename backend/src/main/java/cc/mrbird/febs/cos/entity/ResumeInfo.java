@@ -53,6 +53,11 @@ public class ResumeInfo implements Serializable {
      */
     private Integer studentId;
 
+    /**
+     * 默认简历
+     */
+    private String defaultFlag;
+
     @TableField(exist = false)
     private String expertName;
 
