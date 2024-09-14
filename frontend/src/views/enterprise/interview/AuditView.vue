@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="面试详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="面试详情" @cancel="onClose" :width="850">
     <template slot="footer">
       <a-button key="close" @click="onClose" type="danger" v-if="pluralismData.status == 5 || pluralismData.status == 3">
         关闭
@@ -7,10 +7,10 @@
       <a-button key="result" @click="onCheck(5)" v-if="pluralismData.status == 4">
         面试结束
       </a-button>
-      <a-button key="check" @click="onCheck(4)" v-if="pluralismData.status == 1 || pluralismData == 2">
+      <a-button key="check" @click="onCheck(4)" v-if="pluralismData.status == 1 || pluralismData.status == 2">
         邀约面试
       </a-button>
-      <a-button key="back" @click="onCheck(3)" type="danger" v-if="pluralismData.status == 1 || pluralismData == 2">
+      <a-button key="back" @click="onCheck(3)" type="danger" v-if="pluralismData.status == 1 || pluralismData.status == 2">
         驳回
       </a-button>
     </template>

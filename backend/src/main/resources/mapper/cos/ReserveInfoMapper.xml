@@ -20,6 +20,7 @@
         vi.start_date,
         vi.end_date,
         ei2.name as enterpriseName,
+        ei2.images as enterpriseImages,
         ei2.abbreviation,
         ei2.nature,
         ri2.name as resumeName,

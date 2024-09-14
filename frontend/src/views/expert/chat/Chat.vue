@@ -80,7 +80,7 @@ export default {
   methods: {
     selectContactPerson () {
       this.$get(`/cos/chat-info/contact/person`, {
-        userCode: this.user.userCode,
+        userId: this.user.userId,
         flag: 1
       }).then((r) => {
         this.contactList = r.data.data

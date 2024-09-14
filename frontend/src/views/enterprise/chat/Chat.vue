@@ -5,6 +5,7 @@
         <a-menu-item :key="index" style="height: 80px;margin: 0 auto;text-align: center;line-height: 80px" v-for="(item, index) in contactList" @click="onChange(item)">
           <a-avatar
             :size="46"
+            shape="square"
             icon="user"
             :src="'http://127.0.0.1:9527/imagesWeb/' + item.images"
           />
@@ -80,7 +81,7 @@ export default {
   methods: {
     selectContactPerson () {
       this.$get(`/cos/chat-info/contact/person`, {
-        userCode: this.user.userCode,
+        userId: this.user.userId,
         flag: 2
       }).then((r) => {
         this.contactList = r.data.data

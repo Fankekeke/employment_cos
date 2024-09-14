@@ -384,7 +384,7 @@ export default {
       if (params.readStatus === undefined) {
         delete params.readStatus
       }
-      params.expertCode = this.currentUser.userId
+      params.expertId = this.currentUser.userId
       this.$get('/cos/collect-info/page', {
         ...params
       }).then((r) => {

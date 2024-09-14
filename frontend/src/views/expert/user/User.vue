@@ -1,6 +1,9 @@
 <template>
   <a-row :gutter="20">
-    <a-col :span="8"></a-col>
+    <a-col :span="8" style="text-align: center;padding-top: 50px">
+      <i style="font-size: 30px;text-align: center;">学生信息</i>
+      <img alt="example" style="height: 500px;" src="/static/img/data.png"/>
+    </a-col>
     <a-col :span="16">
       <a-card :loading="loading" :bordered="false">
         <a-form :form="form" layout="vertical">

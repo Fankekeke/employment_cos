@@ -12,6 +12,7 @@
         ci.`type`,
         ci.enterprise_code,
         ei.name as enterpriseName,
+        ei.images as enterpriseImages,
         ei.abbreviation,
         ei.nature,
         ed.logo,

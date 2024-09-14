@@ -51,12 +51,20 @@ public class ChatInfoController {
     /**
      * 根据用户编号获取联系人
      *
-     * @param userCode 用户编号
+     * @param userId 用户编号
      * @return 结果
      */
     @GetMapping("/contact/person")
-    public R selectContactPerson(@RequestParam("userCode") String userCode, @RequestParam("flag") Integer flag) {
-        return R.ok(chatInfoService.selectContactPerson(userCode, flag));
+    public R selectContactPerson(@RequestParam("userId") Integer userId, @RequestParam("flag") Integer flag) {
+        String code = null;
+        if (flag == 2) {
+            EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, userId));
+            code = enterpriseInfo.getCode();
+        } else {
+            ExpertInfo enterpriseInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, userId));
+            code = enterpriseInfo.getCode();
+        }
+        return R.ok(chatInfoService.selectContactPerson(code, flag));
     }
 
     /**

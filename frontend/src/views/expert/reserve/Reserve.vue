@@ -150,14 +150,14 @@ export default {
         ellipsis: true
       }, {
         title: '企业照片',
-        dataIndex: 'logo',
+        dataIndex: 'enterpriseImages',
         customRender: (text, record, index) => {
-          if (!record.logo) return <a-avatar shape="square" icon="user" />
+          if (!record.enterpriseImages) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.enterpriseImages.split(',')[0] } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.logo.split(',')[0] } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.enterpriseImages.split(',')[0] } />
           </a-popover>
         }
       }, {
@@ -224,6 +224,17 @@ export default {
             <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.expertImages.split(',')[0] } />
           </a-popover>
         }
+      }, {
+        title: '备注',
+        dataIndex: 'remark',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
       }, {
         title: '提交时间',
         dataIndex: 'createDate',

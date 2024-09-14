@@ -13,7 +13,7 @@
                 <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
-             <a-col :md="6" :sm="24">
+            <a-col :md="6" :sm="24">
               <a-form-item
                 label="企业名称"
                 :labelCol="{span: 5}"
@@ -35,19 +35,6 @@
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <a-tabs default-active-key="1" @change="callback">
-<!--        <a-tab-pane key="2" tab="收藏兼职">-->
-<!--          &lt;!&ndash; 表格区域 &ndash;&gt;-->
-<!--          <a-table ref="TableInfo"-->
-<!--                   :columns="pluralismColumns"-->
-<!--                   :rowKey="record => record.id"-->
-<!--                   :dataSource="dataSource"-->
-<!--                   :pagination="pagination"-->
-<!--                   :loading="loading"-->
-<!--                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"-->
-<!--                   :scroll="{ x: 900 }"-->
-<!--                   @change="handleTableChange">-->
-<!--          </a-table>-->
-<!--        </a-tab-pane>-->
         <a-tab-pane key="3" tab="岗位">
           <!-- 表格区域 -->
           <a-table ref="TableInfo"
@@ -117,7 +104,7 @@ export default {
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
-        dataIndex: 'expertName'
+        dataIndex: 'enterpriseName'
       }, {
         title: '学生头像',
         dataIndex: 'expertImages',
@@ -141,7 +128,7 @@ export default {
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
-        dataIndex: 'enterName'
+        dataIndex: 'enterpriseName'
       }, {
         title: '学生头像',
         dataIndex: 'expertImages',

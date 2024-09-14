@@ -7,6 +7,7 @@ import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.service.ICollectInfoService;
 import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,6 +105,7 @@ public class CollectInfoController {
             collectInfo.setExpertId(expertInfo.getId());
             collectInfo.setExpertCode(expertInfo.getCode());
         }
+        collectInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(collectInfoService.save(collectInfo));
     }
 

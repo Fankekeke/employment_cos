@@ -82,6 +82,7 @@ public class VenueInfo implements Serializable {
     /**
      * 状态
      */
+    @TableField(exist = false)
     private Boolean status;
 
     @TableField(exist = false)

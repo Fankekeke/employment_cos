@@ -17,6 +17,7 @@
         vi.remark,
         vi.create_date,
         ei.name as enterpriseName,
+        ei.images as enterpriseImages,
         ei.abbreviation,
         ei.nature,
         ed.logo
