@@ -15,30 +15,30 @@
         </a-col>
         <a-col :span="12">
           <div>
-            <a-row class="more-info" v-if="user.roleId == 74">
-              <a-col :span="4"></a-col>
-              <a-col :span="4"></a-col>
-              <a-col :span="4">
-                <head-info title="学生数量" :content="titleData.userNum" :center="false" :bordered="false"/>
-              </a-col>
-              <a-col :span="4">
-                <head-info title="学校数量" :content="titleData.schoolNum" :center="false" :bordered="false"/>
-              </a-col>
-              <a-col :span="4">
-                <head-info title="专业数量" :content="titleData.disciplineNum" :center="false" :bordered="false"/>
-              </a-col>
-              <a-col :span="4">
-                <head-info title="申请单总量" :content="titleData.billNum" :center="false"/>
-              </a-col>
-            </a-row>
+<!--            <a-row class="more-info" v-if="user.roleId == 74">-->
+<!--              <a-col :span="4"></a-col>-->
+<!--              <a-col :span="4"></a-col>-->
+<!--              <a-col :span="4">-->
+<!--                <head-info title="学生数量" :content="titleData.userNum" :center="false" :bordered="false"/>-->
+<!--              </a-col>-->
+<!--              <a-col :span="4">-->
+<!--                <head-info title="学校数量" :content="titleData.schoolNum" :center="false" :bordered="false"/>-->
+<!--              </a-col>-->
+<!--              <a-col :span="4">-->
+<!--                <head-info title="专业数量" :content="titleData.disciplineNum" :center="false" :bordered="false"/>-->
+<!--              </a-col>-->
+<!--              <a-col :span="4">-->
+<!--                <head-info title="申请单总量" :content="titleData.billNum" :center="false"/>-->
+<!--              </a-col>-->
+<!--            </a-row>-->
           </div>
         </a-col>
       </a-card>
     </a-row>
-    <home v-if="user.roleId == 74" @setTitle="setTitleData"></home>
-    <work v-if="user.roleId == 76"></work>
-    <admissions v-if="user.roleId == 75"></admissions>
-    <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 74">
+    <work v-if="user.roleId == 76 || user.roleId == 75 || user.roleId == 74"></work>
+    <home @setTitle="setTitleData"></home>
+<!--    <admissions v-if="user.roleId == 75"></admissions>-->
+    <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 73">
       <a-col :span="12" class="visit-count-wrapper">
         <a-card class="visit-count" hoverable>
           <apexchart ref="count" type=bar height=300 :options="chartOptions" :series="series" />

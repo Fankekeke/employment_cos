@@ -1,75 +1,75 @@
 <template>
   <div>
-    <a-row style="margin-top: 15px">
-      <a-col :span="24">
-        <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 74 || user.roleId == 76">
-          <a-row :gutter="16">
-            <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月申请数量</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.monthOrderNum }}
-                    <span style="font-size: 20px;margin-top: 3px">单</span>
-                  </a-col>
-                </a-row>
-              </a-card>
-            </a-col>
-            <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月审核通过</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.passMonthNum }}
-                    <span style="font-size: 20px;margin-top: 3px">单</span>
-                  </a-col>
-                </a-row>
-              </a-card>
-            </a-col>
-            <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年申请数量</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.yearOrderNum }}
-                    <span style="font-size: 20px;margin-top: 3px">单</span>
-                  </a-col>
-                </a-row>
-              </a-card>
-            </a-col>
-            <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年审核通过</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.passYearNum }}
-                    <span style="font-size: 20px;margin-top: 3px">单</span>
-                  </a-col>
-                </a-row>
-              </a-card>
-            </a-col>
-          </a-row>
-        </div>
-      </a-col>
-    </a-row>
-    <a-row style="margin-top: 15px" v-if="user.roleId == 74 || user.roleId == 76" :gutter="25">
-      <a-col :span="12">
-        <div hoverable :bordered="false" style="width: 100%">
-          <a-skeleton active v-if="loading" />
-          <apexchart v-if="!loading" type="bar" height="300" :options="chartOptions1" :series="series1"></apexchart>
-        </div>
-      </a-col>
-      <a-col :span="12">
-        <div style="width: 100%">
-          <a-skeleton active v-if="loading" />
-          <apexchart  v-if="!loading" type="line" height="300" :options="chartOptions" :series="series"></apexchart>
-        </div>
-      </a-col>
-    </a-row>
+<!--    <a-row style="margin-top: 15px">-->
+<!--      <a-col :span="24">-->
+<!--        <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 74 || user.roleId == 76">-->
+<!--          <a-row :gutter="16">-->
+<!--            <a-col :span="6">-->
+<!--              <a-card hoverable>-->
+<!--                <a-row>-->
+<!--                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月申请数量</a-col>-->
+<!--                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>-->
+<!--                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">-->
+<!--                    {{ titleData.monthOrderNum }}-->
+<!--                    <span style="font-size: 20px;margin-top: 3px">单</span>-->
+<!--                  </a-col>-->
+<!--                </a-row>-->
+<!--              </a-card>-->
+<!--            </a-col>-->
+<!--            <a-col :span="6">-->
+<!--              <a-card hoverable>-->
+<!--                <a-row>-->
+<!--                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月审核通过</a-col>-->
+<!--                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>-->
+<!--                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">-->
+<!--                    {{ titleData.passMonthNum }}-->
+<!--                    <span style="font-size: 20px;margin-top: 3px">单</span>-->
+<!--                  </a-col>-->
+<!--                </a-row>-->
+<!--              </a-card>-->
+<!--            </a-col>-->
+<!--            <a-col :span="6">-->
+<!--              <a-card hoverable>-->
+<!--                <a-row>-->
+<!--                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年申请数量</a-col>-->
+<!--                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>-->
+<!--                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">-->
+<!--                    {{ titleData.yearOrderNum }}-->
+<!--                    <span style="font-size: 20px;margin-top: 3px">单</span>-->
+<!--                  </a-col>-->
+<!--                </a-row>-->
+<!--              </a-card>-->
+<!--            </a-col>-->
+<!--            <a-col :span="6">-->
+<!--              <a-card hoverable>-->
+<!--                <a-row>-->
+<!--                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年审核通过</a-col>-->
+<!--                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>-->
+<!--                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">-->
+<!--                    {{ titleData.passYearNum }}-->
+<!--                    <span style="font-size: 20px;margin-top: 3px">单</span>-->
+<!--                  </a-col>-->
+<!--                </a-row>-->
+<!--              </a-card>-->
+<!--            </a-col>-->
+<!--          </a-row>-->
+<!--        </div>-->
+<!--      </a-col>-->
+<!--    </a-row>-->
+<!--    <a-row style="margin-top: 15px" v-if="user.roleId == 74 || user.roleId == 76" :gutter="25">-->
+<!--      <a-col :span="12">-->
+<!--        <div hoverable :bordered="false" style="width: 100%">-->
+<!--          <a-skeleton active v-if="loading" />-->
+<!--          <apexchart v-if="!loading" type="bar" height="300" :options="chartOptions1" :series="series1"></apexchart>-->
+<!--        </div>-->
+<!--      </a-col>-->
+<!--      <a-col :span="12">-->
+<!--        <div style="width: 100%">-->
+<!--          <a-skeleton active v-if="loading" />-->
+<!--          <apexchart  v-if="!loading" type="line" height="300" :options="chartOptions" :series="series"></apexchart>-->
+<!--        </div>-->
+<!--      </a-col>-->
+<!--    </a-row>-->
     <a-row style="margin-top: 15px">
       <a-col :span="24">
         <a-card hoverable :loading="loading" :bordered="false" title="公告信息" style="margin-top: 15px">
@@ -283,33 +283,33 @@ export default {
   },
   methods: {
     selectHomeData () {
-      this.$get('/cos/sys-school/homeData').then((r) => {
-        let titleData = { userNum: r.data.userNum, schoolNum: r.data.schoolNum, disciplineNum: r.data.disciplineNum, billNum: r.data.billNum }
-        this.$emit('setTitle', titleData)
-        this.titleData.monthOutNum = r.data.monthOutNum
-        this.titleData.passMonthNum = r.data.passMonthNum
-        this.titleData.yearOutNum = r.data.yearOutNum
-        this.titleData.passYearNum = r.data.passYearNum
-
-        this.titleData.monthPutNum = r.data.monthPutNum
-        this.titleData.monthPutPrice = r.data.monthPutPrice
-        this.titleData.yearPutNum = r.data.yearPutNum
-        this.titleData.yearPutPrice = r.data.yearPutPrice
+      this.$get('/cos/bulletin-info/homeData').then((r) => {
         this.bulletinList = r.data.bulletin
-        let values = []
-        // if (r.data.orderNumWithinDays !== null && r.data.orderNumWithinDays.length !== 0) {
-        //   if (this.chartOptions1.xaxis.categories.length === 0) {
-        //     this.chartOptions1.xaxis.categories = r.data.orderNumWithinDays.map(obj => { return obj.days })
-        //   }
-        //   let itemData = { name: '出库统计', data: r.data.orderNumWithinDays.map(obj => { return obj.count }) }
-        //   values.push(itemData)
-        //   this.series1 = values
-        // }
-        this.series1[0].data = r.data.orderNumDayList.map(obj => { return obj.count })
-        this.chartOptions1.xaxis.categories = r.data.orderNumDayList.map(obj => { return obj.days })
-
-        this.series[0].data = r.data.priceDayList.map(obj => { return obj.count })
-        this.chartOptions.xaxis.categories = r.data.priceDayList.map(obj => { return obj.days })
+        // let titleData = { userNum: r.data.userNum, schoolNum: r.data.schoolNum, disciplineNum: r.data.disciplineNum, billNum: r.data.billNum }
+        // this.$emit('setTitle', titleData)
+        // this.titleData.monthOutNum = r.data.monthOutNum
+        // this.titleData.passMonthNum = r.data.passMonthNum
+        // this.titleData.yearOutNum = r.data.yearOutNum
+        // this.titleData.passYearNum = r.data.passYearNum
+        //
+        // this.titleData.monthPutNum = r.data.monthPutNum
+        // this.titleData.monthPutPrice = r.data.monthPutPrice
+        // this.titleData.yearPutNum = r.data.yearPutNum
+        // this.titleData.yearPutPrice = r.data.yearPutPrice
+        // let values = []
+        // // if (r.data.orderNumWithinDays !== null && r.data.orderNumWithinDays.length !== 0) {
+        // //   if (this.chartOptions1.xaxis.categories.length === 0) {
+        // //     this.chartOptions1.xaxis.categories = r.data.orderNumWithinDays.map(obj => { return obj.days })
+        // //   }
+        // //   let itemData = { name: '出库统计', data: r.data.orderNumWithinDays.map(obj => { return obj.count }) }
+        // //   values.push(itemData)
+        // //   this.series1 = values
+        // // }
+        // this.series1[0].data = r.data.orderNumDayList.map(obj => { return obj.count })
+        // this.chartOptions1.xaxis.categories = r.data.orderNumDayList.map(obj => { return obj.days })
+        //
+        // this.series[0].data = r.data.priceDayList.map(obj => { return obj.count })
+        // this.chartOptions.xaxis.categories = r.data.priceDayList.map(obj => { return obj.days })
 
         // if (r.data.putNumWithinDays !== null && r.data.putNumWithinDays.length !== 0) {
         //   if (this.chartOptions2.xaxis.categories.length === 0) {

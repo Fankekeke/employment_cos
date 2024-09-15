@@ -4,8 +4,8 @@
       <a-col :span="6" style="margin-top: 30px">
         <p style="font-size: 30px;font-family: SimHei;font-weight: 500">欢迎使用毕业生就业系统</p>
       </a-col>
-      <a-col :span="24" style="margin-top: 25px;text-align: center">
-        <img alt="example" style="height: 500px;" src="/static/img/manage.png"/>
+      <a-col :span="24" style="text-align: center">
+        <img alt="example" style="width: 65%;" src="/static/img/manages.png"/>
       </a-col>
     </a-row>
   </a-card>

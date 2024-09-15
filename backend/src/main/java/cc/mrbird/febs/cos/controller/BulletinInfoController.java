@@ -6,12 +6,14 @@ import cc.mrbird.febs.cos.entity.BulletinInfo;
 import cc.mrbird.febs.cos.service.IBulletinInfoService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -34,6 +36,16 @@ public class BulletinInfoController {
     @GetMapping("/page")
     public R page(Page<BulletinInfo> page, BulletinInfo bulletinInfo) {
         return R.ok(bulletinInfoService.getBulletinByPage(page, bulletinInfo));
+    }
+
+    @GetMapping("/homeData")
+    public R queryList() {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("bulletin", bulletinInfoService.list(Wrappers.<BulletinInfo>lambdaQuery().eq(BulletinInfo::getRackUp, 1)));
+            }
+        };
+        return R.ok(result);
     }
 
     /**

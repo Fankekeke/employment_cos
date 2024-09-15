@@ -13,7 +13,7 @@
                 <a-input v-model="queryParams.expertName"/>
               </a-form-item>
             </a-col>
-             <a-col :md="6" :sm="24">
+            <a-col :md="6" :sm="24">
               <a-form-item
                 label="企业名称"
                 :labelCol="{span: 5}"
@@ -34,26 +34,6 @@
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <a-tabs default-active-key="1" @change="callback">
-<!--        <a-tab-pane key="1" tab="兼职">-->
-<!--          &lt;!&ndash; 表格区域 &ndash;&gt;-->
-<!--          <a-table ref="TableInfo"-->
-<!--                   :columns="columns"-->
-<!--                   :rowKey="record => record.id"-->
-<!--                   :dataSource="dataSource"-->
-<!--                   :pagination="pagination"-->
-<!--                   :loading="loading"-->
-<!--                   :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"-->
-<!--                   :scroll="{ x: 900 }"-->
-<!--                   @change="handleTableChange">-->
-<!--            <template slot="avatarShow" slot-scope="text, record">-->
-<!--              <template>-->
-<!--                <img alt="头像" :src="'static/avatar/' + text">-->
-<!--              </template>-->
-<!--            </template>-->
-<!--            <template slot="operation" slot-scope="text, record">-->
-<!--            </template>-->
-<!--          </a-table>-->
-<!--        </a-tab-pane>-->
         <a-tab-pane key="2" tab="岗位">
           <!-- 表格区域 -->
           <a-table ref="TableInfo"
@@ -71,11 +51,18 @@
               </template>
             </template>
             <template slot="operation" slot-scope="text, record">
+              <a-icon type="cloud" @click="handleViewOpen(record)" title="详 情"></a-icon>
             </template>
           </a-table>
         </a-tab-pane>
       </a-tabs>
     </div>
+    <audit-view
+      @close="handleViewClose"
+      @success="handleViewSuccess"
+      :pluralismShow="interView.visiable"
+      :pluralismData="interView.data">
+    </audit-view>
   </a-card>
 </template>
 
@@ -83,13 +70,18 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import AuditView from './AuditView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'User',
-  components: {RangeDate},
+  components: {RangeDate, AuditView},
   data () {
     return {
+      interView: {
+        visiable: false,
+        data: null
+      },
       userView: {
         visiable: false,
         data: null
@@ -194,6 +186,10 @@ export default {
       }, {
         title: '面试时间',
         dataIndex: 'createDate'
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     },
     postColumns () {
@@ -202,7 +198,7 @@ export default {
         dataIndex: 'expertName'
       }, {
         title: '企业名称',
-        dataIndex: 'enterName'
+        dataIndex: 'enterpriseName'
       }, {
         title: '学生头像',
         dataIndex: 'expertImages',
@@ -255,6 +251,10 @@ export default {
       }, {
         title: '面试时间',
         dataIndex: 'createDate'
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -262,6 +262,25 @@ export default {
     this.fetch({type: 2})
   },
   methods: {
+    handleViewClose () {
+      this.interView.visiable = false
+    },
+    handleViewSuccess () {
+      this.$message.success('更新成功')
+      this.interView.visiable = false
+      this.search()
+    },
+    handleViewOpen (row) {
+      this.interView.data = row
+      this.interView.visiable = true
+    },
+    handleClose (row) {
+      row.status = 5
+      this.$post(`/cos/interview-info/audit`, {...row}).then((r) => {
+        this.$message.success('撤销成功')
+        this.search()
+      })
+    },
     view (row) {
       this.userView.data = row
       this.userView.visiable = true
@@ -365,7 +384,6 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      params.enterpriseId = this.currentUser.userId
       this.$get('/cos/interview-info/page', {
         ...params
       }).then((r) => {

@@ -112,8 +112,8 @@ export default {
       })
     },
     chat (item) {
-      this.$post(`/cos/chat-info`, {
-        expertCode: this.currentUser.userCode,
+      this.$post(`/cos/chat-info/saveFirst`, {
+        expertId: this.currentUser.userId,
         enterpriseCode: item.enterpriseCode,
         type: 1,
         content: '你好'

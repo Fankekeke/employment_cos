@@ -26,7 +26,7 @@ public interface IExpertInfoService extends IService<ExpertInfo> {
     IPage<LinkedHashMap<String, Object>> selectExpertPage(Page<ExpertInfo> page, ExpertInfo expertInfo);
 
     /**
-     * 根据求职者获取面试信息
+     * 根据学生获取面试信息
      *
      * @param userId 用户ID
      * @return 结果
@@ -34,7 +34,7 @@ public interface IExpertInfoService extends IService<ExpertInfo> {
     LinkedHashMap<String, Object> selectInterByExpert(Integer userId);
 
     /**
-     * 根据求职者获取面试信息
+     * 根据学生获取面试信息
      *
      * @param userId 用户ID
      * @return 结果

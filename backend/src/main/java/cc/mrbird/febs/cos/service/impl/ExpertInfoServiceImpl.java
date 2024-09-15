@@ -50,7 +50,7 @@ public class ExpertInfoServiceImpl extends ServiceImpl<ExpertInfoMapper, ExpertI
     }
 
     /**
-     * 根据求职者获取面试信息
+     * 根据学生获取面试信息
      *
      * @param userId 用户ID
      * @return 结果
@@ -66,7 +66,7 @@ public class ExpertInfoServiceImpl extends ServiceImpl<ExpertInfoMapper, ExpertI
         if (userId == null) {
             return result;
         }
-        // 获取求职者信息
+        // 获取学生信息
         ExpertInfo expertInfo = this.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, userId));
         if (expertInfo == null) {
             return result;
@@ -90,7 +90,7 @@ public class ExpertInfoServiceImpl extends ServiceImpl<ExpertInfoMapper, ExpertI
     }
 
     /**
-     * 根据求职者获取面试信息
+     * 根据学生获取面试信息
      *
      * @param userId 用户ID
      * @return 结果

@@ -48,6 +48,9 @@ public class ChatInfo implements Serializable {
      */
     private String content;
 
+    @TableField(exist = false)
+    private Integer expertId;
+
     /**
      * 发送时间
      */

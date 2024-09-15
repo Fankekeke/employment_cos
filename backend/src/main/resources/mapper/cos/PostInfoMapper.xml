@@ -24,6 +24,7 @@
         pi.welfare,
         ii.name as industryName,
         ei.name as enterpriseName,
+        ei.code as enterpriseCode,
         ei.images as enterpriseImages,
         ei.abbreviation,
         ei.nature,

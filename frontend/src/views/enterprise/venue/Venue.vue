@@ -356,6 +356,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
+      params.enterpriseId = this.currentUser.userId
       this.$get('/cos/venue-info/page', {
         ...params
       }).then((r) => {

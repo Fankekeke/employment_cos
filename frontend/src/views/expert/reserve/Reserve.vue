@@ -367,6 +367,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
+      params.expertId = this.currentUser.userId
       this.$get('/cos/reserve-info/page', {
         ...params
       }).then((r) => {
