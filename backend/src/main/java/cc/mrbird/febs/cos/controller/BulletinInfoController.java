@@ -30,7 +30,7 @@ public class BulletinInfoController {
      * 分页获取公告信息
      *
      * @param page         分页对象
-     * @param bulletinInfo 公告信息
+     * @param bulletinInfo 公告 信息
      * @return 结果
      */
     @GetMapping("/page")
