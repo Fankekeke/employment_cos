@@ -3,6 +3,16 @@
     <div class="user-layout-register">
       <a-form ref="formRegister" :autoFormCreate="(form)=>{this.form = form}" id="formRegister">
         <a-divider orientation="left"><span style="font-size: 15px">账户注册</span></a-divider>
+        <a-form-item>
+          <a-radio-group default-value="2" v-model="registType" button-style="solid">
+            <a-radio-button value="2">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我要招聘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a-radio-button>
+            <a-radio-button value="3">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我要求职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a-radio-button>
+          </a-radio-group>
+        </a-form-item>
         <a-form-item
           fieldDecoratorId="name"
           :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入用户名称' }], validateTrigger: ['change', 'blur']}">
@@ -77,6 +87,7 @@ export default {
   components: {},
   data () {
     return {
+      registType: '2',
       form: null,
       name: '',
       username: '',
@@ -185,10 +196,11 @@ export default {
     handleSubmit () {
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$post('regist', {
+          this.$post('registUser', {
             username: this.username,
             password: this.password,
-            name: this.name
+            name: this.name,
+            flag: this.registType
           }).then(() => {
             this.$message.success('注册成功')
             this.returnLogin()

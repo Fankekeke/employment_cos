@@ -2,13 +2,16 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.domain.FebsConstant;
 import cc.mrbird.febs.common.domain.QueryRequest;
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.service.CacheService;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
 import cc.mrbird.febs.cos.entity.EnterpriseDetail;
 import cc.mrbird.febs.cos.entity.EnterpriseInfo;
+import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.service.IEnterpriseDetailService;
 import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
+import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.system.dao.UserMapper;
 import cc.mrbird.febs.system.dao.UserRoleMapper;
 import cc.mrbird.febs.system.domain.User;
@@ -18,9 +21,11 @@ import cc.mrbird.febs.system.service.UserConfigService;
 import cc.mrbird.febs.system.service.UserRoleService;
 import cc.mrbird.febs.system.service.UserService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +56,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private IEnterpriseInfoService enterpriseInfoService;
+    @Autowired
+    private IExpertInfoService expertInfoService;
 
     @Autowired
     private IEnterpriseDetailService enterpriseDetailService;
@@ -174,6 +181,64 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void regist(String username, String password, String staffCode) throws Exception {
 
+    }
+
+    /**
+     * 注册用户
+     * @param username 用户名
+     * @param password 密码
+     * @param flag 标识（1.普通用户 2.企业 3.专家）
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void registUser(String username, String password, Integer flag) throws Exception {
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(username, password));
+        user.setUsername(username);
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册用户");
+
+        ExpertInfo expertInfo = new ExpertInfo();
+        EnterpriseInfo enterpriseInfo = new EnterpriseInfo();
+
+        UserRole ur = new UserRole();
+        switch (flag) {
+            case 2:
+                enterpriseInfo.setCode("EP-" + System.currentTimeMillis());
+                enterpriseInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+                ur.setRoleId(75L);
+                break;
+            case 3:
+                expertInfo.setHasExist(1);
+                expertInfo.setOpenFlag(1);
+                expertInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+                expertInfo.setCode("EX-" + System.currentTimeMillis());
+                ur.setRoleId(76L);
+                break;
+            default:
+        }
+        this.save(user);
+        ur.setUserId(user.getUserId());
+        this.userRoleMapper.insert(ur);
+
+        if (flag == 3 ) {
+            expertInfo.setUserId(Math.toIntExact(user.getUserId()));
+            expertInfoService.save(expertInfo);
+        }
+
+        if (flag == 2) {
+            enterpriseInfo.setUserId(Math.toIntExact(user.getUserId()));
+            enterpriseInfoService.save(enterpriseInfo);
+        }
+
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
     }
 
     /**
