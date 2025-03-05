@@ -126,6 +126,16 @@ public class InterviewInfoController {
     }
 
     /**
+     * 管理员获取主页统计数据
+     *
+     * @return 结果
+     */
+    @GetMapping("/homeData")
+    public R homeData(@RequestParam(value = "userId", required = false) Integer userId) {
+        return R.ok(interviewInfoService.homeData(userId));
+    }
+
+    /**
      * 查询所属面试管理信息详情
      *
      * @param id 主键ID

@@ -30,4 +30,14 @@ public class InterviewInfoServiceImpl extends ServiceImpl<InterviewInfoMapper, I
     public IPage<LinkedHashMap<String, Object>> selectInterviewPage(Page<InterviewInfo> page, InterviewInfo interviewInfo) {
         return baseMapper.selectInterviewPage(page, interviewInfo);
     }
+
+    /**
+     * 获取主页统计数据
+     *
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> homeData(Integer userId) {
+        return null;
+    }
 }

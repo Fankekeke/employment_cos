@@ -22,4 +22,11 @@ public interface IInterviewInfoService extends IService<InterviewInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectInterviewPage(Page<InterviewInfo> page, InterviewInfo interviewInfo);
+
+    /**
+     * 获取主页统计数据
+     *
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> homeData(Integer userId);
 }
