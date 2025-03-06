@@ -55,6 +55,7 @@ public class BulletinInfo implements Serializable {
      * 发布人
      */
     private String publisher;
+    private String images;
 
 
 }

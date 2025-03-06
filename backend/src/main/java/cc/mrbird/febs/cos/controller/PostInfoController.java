@@ -3,18 +3,24 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.EnterpriseInfo;
+import cc.mrbird.febs.cos.entity.ExpertInfo;
 import cc.mrbird.febs.cos.entity.PostInfo;
 import cc.mrbird.febs.cos.service.IEnterpriseInfoService;
+import cc.mrbird.febs.cos.service.IExpertInfoService;
 import cc.mrbird.febs.cos.service.IPostInfoService;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 岗位管理 控制层
@@ -30,6 +36,8 @@ public class PostInfoController {
 
     private final IEnterpriseInfoService enterpriseInfoService;
 
+    private final IExpertInfoService expertInfoService;
+
     /**
      * 分页获取岗位管理信息
      *
@@ -40,6 +48,30 @@ public class PostInfoController {
     @GetMapping("/page")
     public R page(Page<PostInfo> page, PostInfo postInfo) {
         return R.ok(postInfoService.selectPostPage(page, postInfo));
+    }
+
+    @GetMapping("/queryPostRecommend")
+    public R queryPostRecommend(Integer userId) {
+        // 获取学生信息
+        ExpertInfo expertInfo = expertInfoService.getOne(Wrappers.<ExpertInfo>lambdaQuery().eq(ExpertInfo::getUserId, userId));
+        if (expertInfo == null) {
+            List<PostInfo> postInfoList = postInfoService.list(Wrappers.<PostInfo>lambdaQuery().last("limit 10"));
+            if (CollectionUtil.isEmpty(postInfoList)) {
+                return R.ok(Collections.emptyList());
+            }
+            List<Integer> ids = postInfoList.stream().map(PostInfo::getId).collect(Collectors.toList());
+            return R.ok(postInfoService.queryPostByIds(ids));
+        }
+        List<PostInfo> postInfoList = postInfoService.list(Wrappers.<PostInfo>lambdaQuery().like(StrUtil.isNotEmpty(expertInfo.getPosition()), PostInfo::getPostName, expertInfo.getPosition())
+                .or()
+                .like(StrUtil.isNotEmpty(expertInfo.getLevelOne()), PostInfo::getPostName, expertInfo.getLevelOne())
+                .or()
+                .like(StrUtil.isNotEmpty(expertInfo.getLevelTwo()), PostInfo::getPostName, expertInfo.getLevelTwo()).last("limit 10"));
+        if (CollectionUtil.isEmpty(postInfoList)) {
+            return R.ok(Collections.emptyList());
+        }
+        List<Integer> ids = postInfoList.stream().map(PostInfo::getId).collect(Collectors.toList());
+        return R.ok(postInfoService.queryPostByIds(ids));
     }
 
     /**

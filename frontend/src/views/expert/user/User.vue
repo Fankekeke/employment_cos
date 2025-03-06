@@ -2,9 +2,6 @@
   <a-row :gutter="20">
     <a-col :span="8" style="text-align: center;padding-top: 50px">
       <i style="font-size: 30px;text-align: center;">学生信息</i>
-      <img alt="example" style="height: 500px;" src="/static/img/data.png"/>
-    </a-col>
-    <a-col :span="16">
       <a-card :loading="loading" :bordered="false">
         <a-form :form="form" layout="vertical">
           <a-row :gutter="20">
@@ -158,12 +155,49 @@
         </a-button>
       </a-card>
     </a-col>
-    <a-col :span="8"></a-col>
+    <a-col :span="16">
+      <a-col :span="24" style="margin-top: 15px;background:#ECECEC; padding:30px;">
+        <div v-if="postList.length === 0" style="font-size: 25px;text-align: center;margin-top: 85px;font-family: SimHei;">未找到符合岗位信息</div>
+        <a-col :span="12" v-for="(item, index) in postList" :key="index">
+          <div style="width: 100%;margin-bottom: 15px;text-align: left;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;">
+            <a-card :bordered="false" hoverable>
+              <a-card-meta style="margin-top: 5px;font-size: 13px">
+                <template slot="title">
+                  {{ item.address }} - {{ item.postName }}
+                </template>
+                <template slot="description">
+                  {{ item.responsibility.slice(0, 25) }}...
+                </template>
+              </a-card-meta>
+              <div style="font-size: 13px;font-family: SimHei;margin-top: 15px">
+                <p>{{ item.welfare }}</p> |
+                <span  style="margin-left: 2px">{{ item.industryName }}</span> |
+                <span style="margin-left: 2px">{{ item.workHour }}</span> |
+                <span style="color: #f5222d; font-size: 13px;float: right">{{ item.salary }}</span>
+              </div>
+              <div style="font-size: 13px;font-family: SimHei;margin-top: 15px">
+                <a-avatar shape="square" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + item.images"/>
+                <b style="margin-left: 5px">{{ item.enterpriseName }}</b>
+                <a @click="chat(item)">【联系】</a>
+              </div>
+              <template slot="actions" class="ant-card-actions">
+                <div @click="sendInter(item)"><a-icon key="folder-add" type="folder-add"/> 投递</div>
+                <div @click="rentDetail(item)"><a-icon key="contacts" type="contacts"/> 详情</div>
+                <div v-if="checkCollect(item.id)" @click="sendNotCollect(item)"><a-icon type="heart" style="cursor: pointer;color: red" /> 取消</div>
+                <div v-else @click="sendCollect(item)"><a-icon type="heart" style="cursor: pointer;" /> 收藏</div>
+              </template>
+            </a-card>
+          </div>
+        </a-col>
+      </a-col>
+      <rent-view :pluralismShow="rentView.visiable" :pluralismData="rentView.data" @close="rentView.visiable = false"></rent-view>
+    </a-col>
   </a-row>
 </template>
 
 <script>
 import {mapState} from 'vuex'
+import RentView from '../../manage/post/PostView.vue'
 
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
@@ -184,12 +218,19 @@ export default {
       currentUser: state => state.account.user
     })
   },
+  components: {RentView},
   data () {
     return {
       form: this.$form.createForm(this),
       formItemLayout,
       loading: false,
       fileList: [],
+      postList: [],
+      collectList: [],
+      rentView: {
+        visiable: false,
+        data: null
+      },
       previewVisible: false,
       previewImage: '',
       expertInfo: null
@@ -197,8 +238,70 @@ export default {
   },
   mounted () {
     this.getExpertInfo(this.currentUser.userId)
+    this.queryPostRecommend()
+    this.queryCollect()
   },
   methods: {
+    checkCollect (furnitureId) {
+      if (this.collectList.length === 0) {
+        return false
+      }
+      return this.collectList.some(item => item == furnitureId)
+    },
+    rentDetail (row) {
+      this.rentView.visiable = true
+      this.rentView.data = row
+    },
+    sendNotCollect (row) {
+      this.$put('/cos/collect-info/sendNotCollect', {
+        expertId: this.currentUser.userId,
+        baseId: row.id
+      }).then((r) => {
+        this.$message.success('取消收藏成功')
+        this.queryCollect()
+      })
+    },
+    sendCollect (row) {
+      this.$post('/cos/collect-info', {
+        expertId: this.currentUser.userId,
+        baseId: row.id,
+        type: 3,
+        enterpriseId: row.enterpriseId
+      }).then((r) => {
+        this.$message.success('收藏成功')
+        this.queryCollect()
+      })
+    },
+    sendInter (row) {
+      this.$post('/cos/interview-info', {
+        expertId: this.currentUser.userId,
+        baseId: row.id,
+        type: 2,
+        enterpriseId: row.enterpriseId
+      }).then((r) => {
+        this.$message.success('投递成功')
+      })
+    },
+    queryCollect () {
+      this.$get(`/cos/collect-info/queryCollectByUser/${this.currentUser.userId}`).then((r) => {
+        this.collectList = r.data.data
+      })
+    },
+    chat (item) {
+      this.$post(`/cos/chat-info/saveFirst`, {
+        expertId: this.currentUser.userId,
+        enterpriseCode: item.enterpriseCode,
+        type: 1,
+        content: '你好'
+      }).then((r) => {
+        this.$router.push('/expert/chat')
+      })
+    },
+    queryPostRecommend () {
+      this.$get(`/cos/post-info/queryPostRecommend`, {userId: this.currentUser.userId}).then((r) => {
+        this.postList = r.data.data
+      })
+    },
     getExpertInfo (expertCode) {
       this.$get(`/cos/expert-info/detail/id/${expertCode}`).then((r) => {
         this.expertInfo = r.data.data

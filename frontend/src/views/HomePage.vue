@@ -35,9 +35,8 @@
         </a-col>
       </a-card>
     </a-row>
-    <work v-if="user.roleId == 76 || user.roleId == 75 || user.roleId == 74"></work>
-    <home @setTitle="setTitleData"></home>
-<!--    <admissions v-if="user.roleId == 75"></admissions>-->
+    <work v-if="user.roleId == 76"></work>
+    <home v-if="user.roleId == 74 || user.roleId == 75"></home>
     <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 73">
       <a-col :span="12" class="visit-count-wrapper">
         <a-card class="visit-count" hoverable>

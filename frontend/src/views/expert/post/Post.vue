@@ -37,15 +37,15 @@
     </a-col>
     <a-col :span="24" style="margin-top: 15px;background:#ECECEC; padding:30px;">
       <div v-if="rentList.length === 0" style="font-size: 25px;text-align: center;margin-top: 85px;font-family: SimHei;">未找到符合岗位信息</div>
-      <a-col :span="8" v-for="(item, index) in rentList" :key="index">
+      <a-col :span="6" v-for="(item, index) in rentList" :key="index">
         <div style="width: 100%;margin-bottom: 15px;text-align: left;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;">
           <a-card :bordered="false" hoverable>
-            <a-card-meta style="margin-top: 5px">
+            <a-card-meta style="margin-top: 5px;font-size: 13px">
               <template slot="title">
                 {{ item.address }} - {{ item.postName }}
               </template>
               <template slot="description">
-                {{ item.responsibility.slice(0, 60) }}...
+                {{ item.responsibility.slice(0, 40) }}...
               </template>
             </a-card-meta>
             <div style="font-size: 13px;font-family: SimHei;margin-top: 15px">
@@ -54,7 +54,7 @@
               <span style="margin-left: 2px">{{ item.workHour }}</span> |
               <span style="color: #f5222d; font-size: 13px;float: right">{{ item.salary }}</span>
             </div>
-            <div style="font-size: 15px;font-family: SimHei;margin-top: 15px">
+            <div style="font-size: 13px;font-family: SimHei;margin-top: 15px">
               <a-avatar shape="square" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + item.images"/>
               <b style="margin-left: 5px">{{ item.enterpriseName }}</b>
               <a @click="chat(item)">【联系】</a>
@@ -184,7 +184,7 @@ export default {
 }
 
 >>> .ant-card-head-title {
-  font-size: 15px;
+  font-size: 14px;
   font-family: SimHei;
 }
 >>> .ant-card-extra {

@@ -58,4 +58,48 @@
         pi.create_date desc
 
     </select>
+
+    <select id="queryPostByIds" resultType="java.util.LinkedHashMap">
+        select
+        pi.id,
+        pi.code,
+        pi.post_name,
+        pi.address,
+        pi.experience,
+        pi.responsibility,
+        pi.academic,
+        pi.work_time,
+        pi.work_hour,
+        pi.work_address,
+        pi.work_require,
+        pi.industry_id,
+        pi.create_date,
+        pi.del_flag,
+        pi.enterprise_id,
+        pi.salary,
+        pi.welfare,
+        ii.name as industryName,
+        ei.name as enterpriseName,
+        ei.code as enterpriseCode,
+        ei.images as enterpriseImages,
+        ei.abbreviation,
+        ei.nature,
+        ed.logo
+        from
+        post_info pi
+        left join industry_info ii on
+        (ii.id = pi.industry_id)
+        left join enterprise_info ei on
+        (ei.id = pi.enterprise_id)
+        left join enterprise_detail ed on
+        (ed.enterprise_id = ei.id)
+        where
+        1 = 1
+        AND pi.id IN
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by
+        pi.create_date desc
+    </select>
 </mapper>

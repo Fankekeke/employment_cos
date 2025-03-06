@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * 岗位管理 mapper层
@@ -23,4 +24,12 @@ public interface PostInfoMapper extends BaseMapper<PostInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectPostPage(Page<PostInfo> page, @Param("postInfo") PostInfo postInfo);
+
+    /**
+     * 根据id查询岗位信息
+     *
+     * @param ids id集合
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> queryPostByIds(@Param("ids") List<Integer> ids);
 }
