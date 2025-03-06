@@ -98,4 +98,144 @@
         order by
         ini.create_date desc
     </select>
+
+    <select id="selectOrderByMonth" resultType="cc.mrbird.febs.cos.entity.ReserveInfo">
+        select
+        vi.*
+        from
+        reserve_info vi
+        left join venue_info vi on (vi.id = oi.venue_id)
+        left join enterprise_info ei on (ei.id = vi.enterprise_id)
+        where 1 = 1
+        <if test="staffId != null">
+            AND ei.id = #{staffId}
+        </if>
+        and DATE_FORMAT( vi.create_date, '%Y%m' ) = DATE_FORMAT(
+        CURDATE(),
+        '%Y%m')
+    </select>
+
+    <select id="selectOrderByYear" resultType="cc.mrbird.febs.cos.entity.ReserveInfo">
+        select
+        vi.*
+        from
+        reserve_info vi
+        left join venue_info vi on (vi.id = oi.venue_id)
+        left join enterprise_info ei on (ei.id = vi.enterprise_id)
+        where 1 = 1
+        <if test="staffId != null">
+            AND ei.id = #{staffId}
+        </if>
+        and DATE_FORMAT( vi.create_date, '%Y' ) = DATE_FORMAT(
+        CURDATE(),
+        '%Y')
+    </select>
+
+    <select id="selectInterviewByMonth" resultType="cc.mrbird.febs.cos.entity.InterviewInfo">
+        select
+        vi.*
+        from
+        interview_info vi
+        where 1 = 1
+        <if test="staffId != null">
+            AND vi.enterpriseId = #{staffId}
+        </if>
+        and DATE_FORMAT( vi.create_date, '%Y%m' ) = DATE_FORMAT(
+        CURDATE(),
+        '%Y%m')
+    </select>
+
+    <select id="selectInterviewByYear" resultType="cc.mrbird.febs.cos.entity.InterviewInfo">
+        select
+        vi.*
+        from
+        interview_info vi
+        where 1 = 1
+        <if test="staffId != null">
+            AND vi.enterpriseId = #{staffId}
+        </if>
+        and DATE_FORMAT( vi.create_date, '%Y' ) = DATE_FORMAT(
+        CURDATE(),
+        '%Y')
+    </select>
+
+    <!-- 十天内订单数量统计 -->
+    <select id="selectOrderNumWithinDays" resultType="java.util.LinkedHashMap">
+        SELECT
+        DATE_FORMAT( spo.days, '%m-%d' ) AS days,
+        IFNULL(COUNT(oi.id), 0) AS count
+        FROM
+        (
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+        LEFT JOIN reserve_info oi ON (
+        DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' ))
+        left join venue_info vi on (vi.id = oi.venue_id)
+        left join enterprise_info ei on (ei.id = vi.enterprise_id
+        <if test="staffId != null">
+            AND ei.id = #{staffId}
+        </if>
+        )
+        GROUP BY
+        days
+        ORDER BY
+        days ASC
+    </select>
+
+    <!-- 十天内订单收益统计 -->
+    <select id="selectOrderPriceWithinDays" resultType="java.util.LinkedHashMap">
+        SELECT
+        DATE_FORMAT( spo.days, '%m-%d' ) AS days,
+        IFNULL(COUNT(oi.id), 0) AS count
+        FROM
+        (
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+        LEFT JOIN interview_info oi ON (
+        DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
+        <if test="staffId != null">
+            AND oi.enterpriseId = #{staffId}
+        </if>
+        )
+        GROUP BY
+        days
+        ORDER BY
+        days ASC
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.dao;
 
 import cc.mrbird.febs.cos.entity.InterviewInfo;
+import cc.mrbird.febs.cos.entity.ReserveInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -32,4 +33,52 @@ public interface InterviewInfoMapper extends BaseMapper<InterviewInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectInterViewPostByIds(@Param("ids") List<Integer> ids);
+
+    /**
+     * 本月预约信息
+     *
+     * @param staffId 员工ID
+     * @return 结果
+     */
+    List<ReserveInfo> selectOrderByMonth(@Param("staffId") Integer staffId);
+
+    /**
+     * 本年预约信息
+     *
+     * @param staffId 员工ID
+     * @return 结果
+     */
+    List<ReserveInfo> selectOrderByYear(@Param("staffId") Integer staffId);
+
+    /**
+     * 本月面试投递信息
+     *
+     * @param staffId 员工ID
+     * @return 结果
+     */
+    List<InterviewInfo> selectInterviewByMonth(@Param("staffId") Integer staffId);
+
+    /**
+     * 本年面试投递信息
+     *
+     * @param staffId 员工ID
+     * @return 结果
+     */
+    List<InterviewInfo> selectInterviewByYear(@Param("staffId") Integer staffId);
+
+    /**
+     * 十天内订单数量统计
+     *
+     * @param staffId 员工ID
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderNumWithinDays(@Param("staffId") Integer staffId);
+
+    /**
+     * 十天内订单收益统计
+     *
+     * @param staffId 员工ID
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderPriceWithinDays(@Param("staffId") Integer staffId);
 }
