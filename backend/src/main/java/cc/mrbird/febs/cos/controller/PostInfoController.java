@@ -62,11 +62,18 @@ public class PostInfoController {
             List<Integer> ids = postInfoList.stream().map(PostInfo::getId).collect(Collectors.toList());
             return R.ok(postInfoService.queryPostByIds(ids));
         }
-        List<PostInfo> postInfoList = postInfoService.list(Wrappers.<PostInfo>lambdaQuery().like(StrUtil.isNotEmpty(expertInfo.getPosition()), PostInfo::getPostName, expertInfo.getPosition())
+        List<PostInfo> postInfoList = postInfoService.list(Wrappers.<PostInfo>lambdaQuery()
+                .like(StrUtil.isNotEmpty(expertInfo.getPosition()), PostInfo::getPostName, expertInfo.getPosition())
                 .or()
                 .like(StrUtil.isNotEmpty(expertInfo.getLevelOne()), PostInfo::getPostName, expertInfo.getLevelOne())
                 .or()
-                .like(StrUtil.isNotEmpty(expertInfo.getLevelTwo()), PostInfo::getPostName, expertInfo.getLevelTwo()).last("limit 10"));
+                .like(StrUtil.isNotEmpty(expertInfo.getLevelTwo()), PostInfo::getPostName, expertInfo.getLevelTwo())
+                .or()
+                .like(StrUtil.isNotEmpty(expertInfo.getPosition()), PostInfo::getExperience, expertInfo.getPosition())
+                .or()
+                .like(StrUtil.isNotEmpty(expertInfo.getLevelOne()), PostInfo::getExperience, expertInfo.getLevelOne())
+                .or()
+                .like(StrUtil.isNotEmpty(expertInfo.getLevelTwo()), PostInfo::getExperience, expertInfo.getLevelTwo()).last("limit 10"));
         if (CollectionUtil.isEmpty(postInfoList)) {
             return R.ok(Collections.emptyList());
         }
