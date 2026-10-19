@@ -1,17 +1,17 @@
-### 基于SpringBoot + Vue的毕业生就业信息系统.
+![](https://img.shields.io/badge/License-MIT-blue.svg)
 
-高校毕业生就业服务平台、就业信息管理系统、校园招聘信息系统、毕业生求职跟踪系统
+![](https://img.shields.io/badge/Version-1.0.0-brightgreen.svg)
 
-#### 管理员功能模块介绍：
-###### 公告管理：发布就业政策、招聘通知或系统重要公告。公司管理：审核并维护用人单位的基本信息与状态。学生管理：管理毕业生账号、学籍信息及就业状态。公司职位：查看和监管企业发布的所有招聘岗位信息。学生简历：查阅学生上传的简历，支持导出或推荐给企业。公司信息审核：审核企业注册资料，确保招聘主体合法合规。招聘会管理：组织线上/线下招聘会，设置时间与场地安排。招聘会预约：审批企业或学生参与招聘会的预约申请。岗位申请：监控学生投递记录，协调企业与学生匹配流程。消息管理：统一处理平台内学生、企业间的通信内容。公司学生沟通：支持并记录企业与学生之间的面试或咨询互动。数据统计：分析就业率、热门行业、岗位供需等核心指标。
+![](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-#### 公司功能模块介绍：
-###### 公司注册：提交营业执照等资料完成企业账号注册。公司信息修改：更新企业简介、联系方式、招聘需求等信息。公司职位：发布、编辑或下架面向毕业生的招聘岗位。招聘会管理：查看可参加的招聘会并管理本司展位信息。招聘会预约：申请参与校方组织的招聘会并确认席位。岗位审核：查看学生投递简历，审核并安排面试流程。消息管理：接收并回复学生咨询、面试邀约等消息。公司学生沟通：与意向毕业生在线交流，推进招聘进程。数据统计：查看本司岗位投递量、简历下载数、录用转化率等。
+# 基于 SpringBoot + Vue  的毕业生就业信息系统
 
-#### 学生功能模块介绍：
-###### 学生注册：通过学号或学校认证完成个人账号注册。 学生信息修改：完善或更新个人基本信息与求职意向。 个人简历：创建、编辑并上传标准化电子简历供企业查看。 招聘会查看预约：浏览 upcoming 招聘会并在线预约参会。 预约记录：查看已报名的招聘会及审核状态。 岗位申请：向心仪企业投递简历，申请具体招聘职位。 消息管理：接收企业通知、面试安排或系统提醒消息。 公司学生沟通：与招聘企业HR或负责人进行在线沟通。
+职位投递 · 在线招聘 · 招聘会预约 · 校企对接 | 面向管理员、企业与学生的一站式智慧就业服务平台
+
+本项目是一套基于 **Spring Boot + Vue** 的毕业生就业信息系统，采用前后端分离架构，覆盖 **管理员、公司、学生** 三类核心角色。系统围绕"企业入驻 → 职位发布 → 学生简历 → 岗位申请 → 招聘会预约 → 校企沟通 → 数据统计"的完整就业服务闭环设计，打通从求职到招聘的全流程，构建高效透明的校企对接平台。
 
 #### 安装环境
+️**注意**：请确保您的开发环境已安装以下依赖。
 
 JAVA 环境 
 
@@ -19,33 +19,144 @@ Node.js环境 [https://nodejs.org/en/] 选择14.17
 
 Yarn 打开cmd， 输入npm install -g yarn !!!必须安装完毕nodejs
 
-Mysql 数据库 [https://blog.csdn.net/qq_40303031/article/details/88935262] 一定要把账户和密码记住
+Mysql 数据库 一定要把账户和密码记住
 
 redis
 
-Idea 编译器 [https://blog.csdn.net/weixin_44505194/article/details/104452880]
+Idea 编译器
 
-WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
+WebStorm OR VScode 编译器
 
 #### 采用技术及功能
 
 后端：SpringBoot、MybatisPlus、MySQL、Redis、
 前端：Vue、Apex、Antd、Axios
 
-平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件)
+平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件) + 百度地图 API
 
 平台后台：springboot(框架) + redis(缓存中间件) + shiro(权限中间件) + mybatisplus(orm) + restful风格接口 + mysql(数据库)
 
 开发环境：windows10 or windows7 ， vscode or webstorm ， idea + lambok
 
-##### 管理员：
-公告管理、公司管理、学生管理、公司职位、学生简历、公司信息审核、招聘会管理、招聘会预约、岗位申请、消息管理、公司学生沟通、数据统计
+---
 
-##### 公司：
-公司注册、公司信息修改、公司职位、招聘会管理、招聘会预约、岗位审核、消息管理、公司学生沟通、数据统计
+## 核心特性
 
-##### 学生：
-学生注册、学生信息修改，个人简历，招聘会查看预约、预约记录、岗位申请、消息管理、公司学生沟通
+ **多企业入驻审核**：企业在线注册并提交资质审核，管理员审核通过后企业方可发布职位，保障招聘信息真实可靠。
+- **在线简历与投递**：学生在线完善个人简历（基本信息、教育经历、实习经历、技能证书等），一键投递心仪岗位。
+- **招聘会管理**：支持线上/线下招聘会发布，学生在线预约参会，企业在线预约展位，系统自动同步预约记录。
+- **校企即时沟通**：内置消息系统，学生与企业可在线沟通职位详情、面试安排等，消息实时推送。
+- **岗位申请审核**：企业可查看学生投递记录并进行审核（通过/拒绝），学生实时查看申请状态。
+- **多维数据统计**：平台、企业、学生三级数据看板，支持岗位申请统计、招聘会参与统计、就业率统计等图表可视化。
+---
+
+## 适用场景
+
+- 高校毕业生就业服务平台
+- 校园招聘管理系统
+- 企业招聘与人才对接平台
+- 计算机类毕业设计/课程设计项目
+---
+
+## 功能模块概览
+
+## 管理员端
+
+管理员为平台运营中枢，负责全局管控：
+
+### 基础管理
+
+- **公告管理**：发布平台公告，包括公告标题、内容、类型（招聘会通知/就业政策/系统维护）、发布时间、置顶状态。
+- **消息管理**：管理全平台消息通知，包括系统消息发送、消息记录查看、消息撤回等操作。
+- **数据统计**：综合数据看板，展示平台企业数、学生数、职位数、申请量、招聘会场次等趋势图表。
+
+### 企业与职位
+
+- **公司管理**：管理入驻企业，包括企业名称、统一社会信用代码、联系人、联系电话、行业、规模、审核状态、账户状态，支持账户冻结/解冻。
+- **公司信息审核**：审核企业注册提交的资质信息（营业执照、企业简介等），支持通过/拒绝操作并填写审核意见。
+- **公司职位**：查看全平台企业发布的职位，包括职位名称、薪资范围、任职要求、招聘人数、发布状态，支持违规职位下架。
+
+### 学生与简历
+
+- **学生管理**：管理注册学生，包括学生姓名、学号、专业、年级、手机号、账户状态，支持账户冻结/解冻。
+- **学生简历**：查看学生提交的个人简历，包括基本信息、教育经历、实习经历、技能证书、求职意向等。
+
+### 招聘会与申请
+
+- **招聘会管理**：发布与管理招聘会，包括招聘会名称、时间、地点（线上/线下）、参会企业、参会学生、状态，支持招聘会详情编辑。
+- **招聘会预约**：查看全平台招聘会预约记录，包括企业预约（展位申请）与学生预约（参会报名），支持预约审核。
+- **岗位申请**：查看全平台岗位申请记录，包括申请学生、申请职位、申请时间、审核状态，支持申请干预。
+- **公司学生沟通**：查看企业与学生的沟通记录，支持违规内容处理。
+
+## 公司端
+
+企业通过 Web 端进行招聘管理：
+
+### 账户与企业
+
+- **公司注册**：企业在线注册，填写企业名称、统一社会信用代码、联系人、联系电话、行业、规模、企业简介、上传营业执照等资质文件。
+- **公司信息修改**：维护企业基本信息，包括企业简介、Logo、联系方式、办公地址、企业动态等。
+
+### 职位与招聘
+
+- **公司职位**：发布与管理招聘职位，包括职位名称、薪资范围、工作地点、任职要求、招聘人数、截止日期，支持职位上下架。
+- **岗位审核**：查看学生投递的岗位申请，包括申请学生简历预览、申请时间，支持通过/拒绝操作并填写审核意见。
+
+### 招聘会
+
+- **招聘会管理**：查看平台发布的招聘会列表，了解招聘会详情与参会要求。
+- **招聘会预约**：在线预约参加招聘会（申请展位），填写参展信息，等待管理员审核。
+
+### 沟通与数据
+
+- **消息管理**：查看系统消息（审核结果/预约结果/平台通知）与学生发送的消息。
+- **公司学生沟通**：与申请职位的学生在线沟通，解答职位疑问、安排面试等。
+- **数据统计**：企业数据看板，展示职位浏览量、申请量、审核通过率、招聘会参与情况等。
+
+## 学生端
+
+学生通过 Web 端进行求职与参会：
+
+### 账户与个人
+
+- **学生注册**：学生在线注册，填写姓名、学号、专业、年级、手机号等基本信息。
+- **学生信息修改**：维护个人基本信息，包括姓名、手机号、邮箱、求职意向等。
+- **个人简历**：完善个人简历，包括基本信息、教育经历、实习经历、项目经历、技能证书、自我评价、求职意向（期望职位/期望薪资/期望城市）等，支持简历预览与导出。
+
+### 求职与参会
+
+- **岗位申请**：浏览企业发布的职位，查看职位详情后一键投递申请，实时查看申请状态（待审核/已通过/已拒绝）。
+- **招聘会查看预约**：浏览平台发布的招聘会列表，查看招聘会详情（时间、地点、参会企业），在线预约参会。
+- **预约记录**：查看个人招聘会预约记录，包括预约状态（待审核/已通过/已拒绝）。
+
+### 沟通与消息
+
+- **消息管理**：查看系统消息（申请结果/预约结果/平台公告）与企业发送的消息。
+- **公司学生沟通**：与招聘企业在线沟通，咨询职位详情、面试安排等。
+---
+
+## 项目结构
+
+```text
+pharmacy-dispensing-system/
+├── backend/            # 后端 API 服务
+│   ├── src/
+│   │   ├── controllers/  # 控制器
+│   │   ├── models/       # 数据模型
+│   │   ├── routes/       # 路由
+│   │   └── services/     # 业务逻辑
+│   └── package.json
+├── frontend/           # 前端 Web 应用
+│   ├── src/
+│   │   ├── views/      # 页面视图
+│   │   ├── components/ # 公共组件
+│   │   └── store/      # 状态管理
+│   └── package.json
+├── docs/               # 项目文档与 API 接口说明
+├── LICENSE
+└── README.md
+```
+---
 
 
 #### 前台启动方式
@@ -55,30 +166,25 @@ WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
 #### 默认后台账户密码
 [管理员]
 admin
-1234qwer
+123456
 
-[公司]
-enterprise
-1234qwer
-
-[学生]
+[用户]
 fank
-1234qwer
-#### 项目截图
+123456
 
+#### 项目截图
 |  |  |
 |---------------------|---------------------|
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477337683.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477497506.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477715466.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477482568.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477702846.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477467370.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477630649.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477452144.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477603216.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477439422.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477585933.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477426360.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477571833.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477412801.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477556024.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477399243.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477542193.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477387634.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477511086.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1728477373245.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/work/936e9baf53eb9a217af4f89c616dc19.png) |
+| ![](./assets/image%20(1).png) | ![](./assets/image%20(2).png) |
+| ![](./assets/image%20(3).png) | ![](./assets/image%20(4).png) |
+| ![](./assets/image%20(5).png) | ![](./assets/image%20(6).png) |
+| ![](./assets/image%20(7).png) | ![](./assets/image%20(8).png) |
+| ![](./assets/image%20(9).png) | ![](./assets/image%20(10).png) |
+| ![](./assets/image%20(11).png) | ![](./assets/image%20(12).png) |
+| ![](./assets/image%20(13).png) | ![](./assets/image%20(14).png) |
+| ![](./assets/image%20(15).png) | ![](./assets/image%20(16).png) |
+| ![](./assets/image%20(17).png) | ![](./assets/image%20(18).png) |
+| ![](./assets/image%20(19).png) | ![](./assets/image%20(20).png) |
 
 #### 演示视频
 
@@ -96,7 +202,10 @@ WeChat: `Storm_Berserker`
 
 > 项目部署调试不好包退！功能逻辑没讲明白包退！
 
+<div align=center><img align="center" src="./assets/product_word.png" alt="fankekeke" /></div>
+
 #### 其它资源
+[2026年-答辩顺利通过-客户评价🀄](https://berserker287.github.io/2026/06/29/2026%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
 [2025年-答辩顺利通过-客户评价🍜](https://berserker287.github.io/2025/06/18/2025%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
@@ -120,4 +229,8 @@ WeChat: `Storm_Berserker`
 
 More info: [悲伤的橘子树](https://berserker287.github.io/)
 
-<p><img align="center" src="https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/%E5%90%88%E4%BD%9C%E7%89%A9%E6%96%99%E6%A0%B7%E5%BC%8F%20(3).png" alt="fankekeke" /></p>
+<div align="center"><img align="center" src="./assets/chat_qr_code.png" alt="fankekeke" width=250 /></div>
+
+<p><img align="center" src="./assets/wechat_group.png" alt="fankekeke" /></p>
+
+**感谢查看**
